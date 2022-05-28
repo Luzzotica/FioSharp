@@ -12,6 +12,7 @@ using NBitcoin;
 using NBitcoin.Crypto;
 using Newtonsoft.Json;
 using NUnit.Framework;
+using static EosSharp.Core.Helpers.FioHelper;
 
 namespace EosSharp.UnitTests
 {
@@ -44,12 +45,6 @@ namespace EosSharp.UnitTests
             publicKeyAlice = new Key(privateKeyAlice).PubKey.ToBytes();
             privateKeyBob = Hashes.SHA256(Encoding.ASCII.GetBytes("bob"));
             publicKeyBob = new Key(privateKeyBob).PubKey.ToBytes();
-
-            //Console.WriteLine("--- KEYS ---");
-            //Console.WriteLine(SerializationHelper.ByteArrayToHexString(privateKeyAlice));
-            //Console.WriteLine(SerializationHelper.ByteArrayToHexString(privateKeyBob));
-            //Console.WriteLine(SerializationHelper.ByteArrayToHexString(publicKeyAlice));
-            //Console.WriteLine(SerializationHelper.ByteArrayToHexString(publicKeyBob));
         }
 
         Dictionary<string, object> newFundsContent = new Dictionary<string, object>() {
@@ -71,23 +66,13 @@ namespace EosSharp.UnitTests
         byte[] IV = new byte[] { 0xf3, 0x00, 0x88, 0x8c, 0xa4, 0xf5, 0x12, 0xce, 0xbd, 0xc0, 0x02, 0x0f, 0xf0, 0xf7, 0x22, 0x4c };
         string newFundsContentCipherBase64 = "8wCIjKT1Es69wAIP8PciTOB8F09qqDGdsq0XriIWcOkqpZe9q4FwKu3SGILtnAWtJGETbcAqd3zX7NDptPUQsS1ZfEPiK6Hv0nJyNbxwiQc=";
 
-    //    SHARED SECRET
-    //console.log src/encryption-check.ts:27
-    //  <Buffer a7 1b 4e c5 a9 57 79 26 a1 d2 aa 1d 9d 99 32 7f d3 b6 8f 6a 1e a5 97 20 0a 0d 89 0b d3 33 1d f3 00 a2 d4 9f ec 0b 2b 3e 69 69 ce 92 63 c5 d6 cf 47 c1... 14 more bytes>
-    //console.log src/encryption-check.ts:29
-    //  <Buffer 5c 38 12 dc 9e cd 2e 29 dc 9a 20 aa b9 06 9d f9 40 ab b0 5f cd 10 88 dc ae b6 05 90 e2 c7 9e 41 41 b7 48 43 04 f8 93 e9 d9 93 8e 12 52 47 de 6d 61 8e ... 14 more bytes>
-    //console.log src/encryption-check.ts:31
-    //  <Buffer 5c 38 12 dc 9e cd 2e 29 dc 9a 20 aa b9 06 9d f9 40 ab b0 5f cd 10 88 dc ae b6 05 90 e2 c7 9e 41>
-    //console.log src/encryption-check.ts:33
-    //  <Buffer 41 b7 48 43 04 f8 93 e9 d9 93 8e 12 52 47 de 6d 61 8e 5f 50 ba 1a 13 4b 67 80 61 d1 0a b5 26 8b>
-
         [Test]
         public async Task TestDHEncrypt()
         {
             try { 
                 string cipherAliceBase64 = await Fio.DHEncrypt(privateKeyAlice,
                     publicKeyBob,
-                    Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                    FioContentType.newFundsContent,
                     newFundsContent);
                 Assert.AreEqual(newFundsContentCipherBase64, cipherAliceBase64);
 

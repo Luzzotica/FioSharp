@@ -94,22 +94,20 @@ namespace EosSharp.UnitTests
             try
             {
                 GetAbiResponse resp = await ApiUnitTestCases.GetReqObtAbi();
-                foreach (AbiStruct s in resp.abi.structs)
-                {
-                    Console.WriteLine(s.name);
-                    Console.WriteLine(s.@base);
-                    foreach (AbiField f in s.fields)
-                    {
-                        Console.Write(f.type);
-                        Console.Write(" ");
-                        Console.Write(f.name);
-                        Console.Write(" | ");
-                    }
-                    Console.WriteLine();
-                }
+                //foreach (AbiStruct s in resp.abi.structs)
+                //{
+                //    Console.WriteLine(s.name);
+                //    Console.WriteLine(s.@base);
+                //    foreach (AbiField f in s.fields)
+                //    {
+                //        Console.Write(f.type);
+                //        Console.Write(" ");
+                //        Console.Write(f.name);
+                //        Console.Write(" | ");
+                //    }
+                //    Console.WriteLine();
+                //}
                 success = true;
-
-                Assert.IsFalse(true);
             }
             catch (Exception ex)
             {
