@@ -12,7 +12,6 @@ using NBitcoin;
 using NBitcoin.Crypto;
 using Newtonsoft.Json;
 using NUnit.Framework;
-using static EosSharp.Core.Helpers.FioHelper;
 
 namespace EosSharp.UnitTests
 {
@@ -47,7 +46,7 @@ namespace EosSharp.UnitTests
             publicKeyBob = new Key(privateKeyBob).PubKey.ToBytes();
         }
 
-        Dictionary<string, object> newFundsContent = new Dictionary<string, object>() {
+        readonly Dictionary<string, object> newFundsContent = new Dictionary<string, object>() {
             { "payee_public_address", "purse.alice" },
             { "amount", "1" },
             { "chain_code", "FIO" },
@@ -63,8 +62,8 @@ namespace EosSharp.UnitTests
         byte[] publicKeyBob;
 
         //f300888ca4f512cebdc0020ff0f7224c
-        byte[] IV = new byte[] { 0xf3, 0x00, 0x88, 0x8c, 0xa4, 0xf5, 0x12, 0xce, 0xbd, 0xc0, 0x02, 0x0f, 0xf0, 0xf7, 0x22, 0x4c };
-        string newFundsContentCipherBase64 = "8wCIjKT1Es69wAIP8PciTOB8F09qqDGdsq0XriIWcOkqpZe9q4FwKu3SGILtnAWtJGETbcAqd3zX7NDptPUQsS1ZfEPiK6Hv0nJyNbxwiQc=";
+        readonly byte[] IV = new byte[] { 0xf3, 0x00, 0x88, 0x8c, 0xa4, 0xf5, 0x12, 0xce, 0xbd, 0xc0, 0x02, 0x0f, 0xf0, 0xf7, 0x22, 0x4c };
+        const string newFundsContentCipherBase64 = "8wCIjKT1Es69wAIP8PciTOB8F09qqDGdsq0XriIWcOkqpZe9q4FwKu3SGILtnAWtJGETbcAqd3zX7NDptPUQsS1ZfEPiK6Hv0nJyNbxwiQc=";
 
         [Test]
         public async Task TestDHEncrypt()
@@ -72,13 +71,14 @@ namespace EosSharp.UnitTests
             try { 
                 string cipherAliceBase64 = await Fio.DHEncrypt(privateKeyAlice,
                     publicKeyBob,
-                    FioContentType.newFundsContent,
-                    newFundsContent);
+                    FioHelper.NEW_FUNDS_CONTENT,
+                    newFundsContent,
+                    IV);
                 Assert.AreEqual(newFundsContentCipherBase64, cipherAliceBase64);
 
                 string cipherBobBase64 = await Fio.DHEncrypt(privateKeyBob,
                     publicKeyAlice,
-                    Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                    FioHelper.NEW_FUNDS_CONTENT,
                     newFundsContent,
                     IV);
                 Assert.AreEqual(newFundsContentCipherBase64, cipherBobBase64);
@@ -96,13 +96,13 @@ namespace EosSharp.UnitTests
             {
                 Dictionary<string, object> newFundsContentAlice = await Fio.DHDecrypt(privateKeyAlice,
                     publicKeyBob,
-                    Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                    FioHelper.NEW_FUNDS_CONTENT,
                     newFundsContentCipherBase64);
                 Assert.AreEqual(newFundsContent, newFundsContentAlice);
 
                 Dictionary<string, object> newFundsContentBob = await Fio.DHDecrypt(privateKeyBob,
                     publicKeyAlice,
-                    Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                    FioHelper.NEW_FUNDS_CONTENT,
                     newFundsContentCipherBase64);
                 Assert.AreEqual(newFundsContent, newFundsContentBob);
             }
@@ -137,7 +137,7 @@ namespace EosSharp.UnitTests
 
                 string contentEncrypted = await Fio.DHEncrypt(payerPrivKey,
                     payeePubKey,
-                    Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                    FioHelper.NEW_FUNDS_CONTENT,
                     content);
 
                 var trx = new Core.Api.v1.Transaction()

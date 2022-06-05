@@ -250,6 +250,19 @@ namespace EosSharp.Core.Providers
             }
         }
 
+        public AbiStruct GetAbiStructFromAbi(Abi abi, string abiStructName)
+        {
+            foreach (AbiStruct abiStruct in abi.structs)
+            {
+                if (abiStruct.name.Equals(abiStructName))
+                {
+                    return abiStruct;
+                }
+            }
+
+            return null;
+        }
+
         public byte[] SerializeStructData(AbiStruct contentStruct, Dictionary<string, object> content, Abi abi)
         {
             using (MemoryStream ms = new MemoryStream())

@@ -31,7 +31,7 @@ namespace EosSharp.Core
         /// <param name="content">The content, structured properly.</param>
         /// <param name="IV">A strongly random 16 byte array. Leave null unless testing.</param>
         /// <returns></returns>
-        public async Task<string> DHEncrypt(byte[] privateKey, byte[] otherPubKey, FioContentType fioContentType, Dictionary<string, object> content, byte[] IV = null)
+        public async Task<string> DHEncrypt(byte[] privateKey, byte[] otherPubKey, string fioContentType, Dictionary<string, object> content, byte[] IV = null)
         {
             Abi abi = await AbiSerializer.GetAbi(FIO_REQ_OBT_CONTRACT);
             byte[] message = AbiSerializer.SerializeStructData(
@@ -44,7 +44,7 @@ namespace EosSharp.Core
             return Convert.ToBase64String(encrypted);
         }
 
-        public async Task<Dictionary<string, object>> DHDecrypt(byte[] privateKey, byte[] otherPubKey, FioContentType fioContentType, string content)
+        public async Task<Dictionary<string, object>> DHDecrypt(byte[] privateKey, byte[] otherPubKey, string fioContentType, string content)
         {
             byte[] secret = Secp256K1Manager.GetSharedKey(privateKey, otherPubKey);
             byte[] contentBytes = Convert.FromBase64String(content);

@@ -6,14 +6,15 @@ namespace EosSharp.Core.Helpers
 {
     public class FioHelper
     {
-        public enum FioContentType { newFundsContent, recordObtDataContent }
-        public static AbiStruct GetFioAbiStruct(FioContentType contentType)
+        public const string NEW_FUNDS_CONTENT = "new_funds_content";
+        public const string RECORD_OBT_DATA_CONTENT = "record_obt_data_content";
+        public static AbiStruct GetFioAbiStruct(string contentType)
         {
-            if (contentType == FioContentType.newFundsContent)
+            if (contentType.Equals(NEW_FUNDS_CONTENT))
             {
                 return GetNewFundsRequestAbiStruct();
             }
-            else if (contentType == FioContentType.recordObtDataContent)
+            else if (contentType.Equals(RECORD_OBT_DATA_CONTENT))
             {
                 return GetRecordObtDataContent();
             }
@@ -30,7 +31,7 @@ namespace EosSharp.Core.Helpers
             }
 
             newFundsContent = new AbiStruct();
-            newFundsContent.name = "new_funds_content";
+            newFundsContent.name = NEW_FUNDS_CONTENT;
             newFundsContent.@base = "";
             newFundsContent.fields = new List<AbiField>();
             newFundsContent.fields.Add(MakeAbiField("payee_public_address", "string"));
@@ -53,7 +54,7 @@ namespace EosSharp.Core.Helpers
             }
 
             recordObtDataContent = new AbiStruct();
-            recordObtDataContent.name = "new_funds_content";
+            recordObtDataContent.name = RECORD_OBT_DATA_CONTENT;
             recordObtDataContent.@base = "";
             newFundsContent.fields = new List<AbiField>();
             recordObtDataContent.fields.Add(MakeAbiField("payer_public_address", "string"));

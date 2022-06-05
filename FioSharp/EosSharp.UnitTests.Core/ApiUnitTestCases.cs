@@ -370,7 +370,7 @@ namespace EosSharp.UnitTests
 
             string contentEncrypted = await fio.DHEncrypt(payerPrivKey,
                 payeePubKey,
-                Core.Helpers.FioHelper.FioContentType.newFundsContent,
+                FioHelper.NEW_FUNDS_CONTENT,
                 content);
 
             var trx = new Core.Api.v1.Transaction()
