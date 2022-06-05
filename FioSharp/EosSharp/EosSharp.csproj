@@ -18,6 +18,7 @@
     <Version>1.0.1</Version>
     <PackageReleaseNotes>Increased usability of CryptoHelper class to make it easier to create Fio Req transactions.</PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <ReleaseVersion>1.2</ReleaseVersion>
   </PropertyGroup>
 
   <ItemGroup>
