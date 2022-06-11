@@ -1,27 +1,27 @@
-﻿using EosSharp.Core;
-using EosSharp.Core.Api.v1;
-using EosSharp.Core.Helpers;
-using EosSharp.Core.Providers;
+﻿using FioSharp.Core;
+using FioSharp.Core.Api.v1;
+using FioSharp.Core.Helpers;
+using FioSharp.Core.Providers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EosSharp.UnitTests
+namespace FioSharp.UnitTests
 {
     public class ApiUnitTestCases
     {
         private FioBase fio;
-        private EosConfigurator EosConfig;
-        private EosApi DefaultApi;
+        private FioConfigurator EosConfig;
+        private FioApi DefaultApi;
 
-        public ApiUnitTestCases(EosConfigurator eosConfig, EosApi api)
+        public ApiUnitTestCases(FioConfigurator eosConfig, FioApi api)
         {
             EosConfig = eosConfig;
             DefaultApi = api;
         }
 
-        public ApiUnitTestCases(FioBase fio, EosConfigurator eosConfig, EosApi api)
+        public ApiUnitTestCases(FioBase fio, FioConfigurator eosConfig, FioApi api)
         {
             this.fio = fio;
             EosConfig = eosConfig;

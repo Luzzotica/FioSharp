@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EosSharp.Core.DataAttributes
+namespace FioSharp.Core.DataAttributes
 {
     /// <summary>
     /// Data Attribute to map how the field is represented in the abi

@@ -3,11 +3,11 @@
   
 
 // Auto Generated, do not edit.
-using EosSharp.Core.DataAttributes;
+using FioSharp.Core.DataAttributes;
 using System;
 using System.Collections.Generic;
 
-namespace EosSharp.Core.Api.v1
+namespace FioSharp.Core.Api.v1
 {
 	#region generate api types
 	[Serializable]
@@ -969,9 +969,81 @@ namespace EosSharp.Core.Api.v1
 	[Serializable]
     public class GetControlledAccountsResponse
     {
- 
 		public List<string> controlled_accounts;
     }
+	[Serializable]
+	public class APIRequestWithPublicKey
+	{
+		public string fio_public_key;
+	}
+	[Serializable]
+	public class GetFioBalanceResponse
+	{
+		public int balance;
+		public int available;
+		public int staked;
+		public int srps;
+		public int roe;
+	}
+	[Serializable]
+	public class GetFioNamesResponse
+	{
+		public List<FioDomain> fio_domains;
+		public List<FioAddress> fio_addresses;
+	}
+	[Serializable]
+	public class FioDomain
+    {
+		public string fio_domain;
+		public string expiration;
+		public int is_public;
+    }
+	[Serializable]
+	public class FioAddress
+	{
+		public string fio_address;
+		public string expiration;
+		public int remaining_bundled_tx;
+	}
+	[Serializable]
+	public class GetFioAddressesResponse
+	{
+		public List<FioAddress> fio_addresses;
+		public int more;
+	}
+	[Serializable]
+	public class GetFioDomainsResponse
+	{
+		public List<FioAddress> fio_domains;
+		public int more;
+	}
+	[Serializable]
+	public class AvailCheckRequest
+	{
+		public string fio_name;
+	}
+	[Serializable]
+	public class AvailCheckResponse
+	{
+		public int is_registered;
+	}
+	[Serializable]
+	public class GetPubAddressRequest
+	{
+		public string fio_address;
+		public string chain_code;
+		public string token_code;
+	}
+	[Serializable]
+	public class GetPubAddressResponse
+	{
+		public string public_address;
+	}
+	[Serializable]
+	public class GetActorResponse
+	{
+		public string actor;
+	}
 	#endregion
 }
 

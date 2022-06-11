@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EosSharp.Unity3D
+namespace FioSharp.Unity3D
 {
     /// <summary>
     /// Class to implement async / awayt on a UnityWebRequest class

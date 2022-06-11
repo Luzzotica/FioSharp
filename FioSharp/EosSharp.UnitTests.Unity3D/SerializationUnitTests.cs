@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace EosSharp.UnitTests.Unity3D
+namespace FioSharp.UnitTests.Unity3D
 {
     public class SerializationUnitTests
     {

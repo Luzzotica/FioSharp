@@ -1,12 +1,12 @@
-﻿using EosSharp.Core.Interfaces;
+﻿using FioSharp.Core.Interfaces;
 using System;
 
-namespace EosSharp.Core
+namespace FioSharp.Core
 {
     /// <summary>
     /// Aggregates all properties to configure Eos client
     /// </summary>
-    public class EosConfigurator
+    public class FioConfigurator
     {
         /// <summary>
         /// http or https location of a nodeosd server providing a chain API.

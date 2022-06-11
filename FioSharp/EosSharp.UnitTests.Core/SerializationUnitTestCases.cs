@@ -1,9 +1,9 @@
-﻿using EosSharp.Core.Helpers;
+﻿using FioSharp.Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EosSharp.UnitTests
+namespace FioSharp.UnitTests
 {
     public class SerializationUnitTestCases
     {

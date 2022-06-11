@@ -1,7 +1,7 @@
 ﻿using FioSharp.Secp256k1;
-using EosSharp.Core.Exceptions;
-using EosSharp.Core.Helpers;
-using EosSharp.Core.Interfaces;
+using FioSharp.Core.Exceptions;
+using FioSharp.Core.Helpers;
+using FioSharp.Core.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EosSharp
+namespace FioSharp
 {
     /// <summary>
     /// Http Handler implementation using System.Net.Http.HttpClient

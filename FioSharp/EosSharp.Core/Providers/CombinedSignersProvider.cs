@@ -1,11 +1,11 @@
-﻿using EosSharp.Core.Interfaces;
+﻿using FioSharp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 
-namespace EosSharp.Core.Providers
+namespace FioSharp.Core.Providers
 {
     /// <summary>
     /// Signature provider that combine multiple signature providers to complete all the signatures for a transaction

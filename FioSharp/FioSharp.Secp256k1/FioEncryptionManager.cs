@@ -8,24 +8,13 @@ using NBitcoin.Crypto;
 
 namespace FioSharp.Secp256k1
 {
-    public class FioEncryptionManager : IFioEncryptionManager
+    public class FioEncryptionManager
     {
-        byte[] KeBuf = new byte[32];
-        byte[] IVBuf = new byte[16];
-        byte[] hmacBuf = new byte[32];
+        static byte[] KeBuf = new byte[32];
+        static byte[] IVBuf = new byte[16];
+        static byte[] hmacBuf = new byte[32];
 
-        public static FioEncryptionManager instance;
-        public static FioEncryptionManager GetInstance()
-        {
-            if (instance == null)
-            {
-                instance = new FioEncryptionManager();
-            }
-
-            return instance;
-        }
-
-        public byte[] EncryptBytes(byte[] secret, byte[] data, byte[] IV = null)
+        public static byte[] EncryptBytes(byte[] secret, byte[] data, byte[] IV = null)
         {
             byte[] K = Hashes.SHA512(secret);
             Array.Copy(K, KeBuf, 32);
@@ -75,7 +64,7 @@ namespace FioSharp.Secp256k1
             return IVBuf.Concat(C).Concat(hmacBuf).ToArray();
         }
 
-        public byte[] DecryptBytes(byte[] secret, byte[] message)
+        public static byte[] DecryptBytes(byte[] secret, byte[] message)
         {
             byte[] K = Hashes.SHA512(secret);
             Array.Copy(K, KeBuf, 32);

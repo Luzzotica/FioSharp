@@ -3,7 +3,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace EosSharp.Core.Interfaces
+namespace FioSharp.Core.Interfaces
 {
     /// <summary>
     /// Http handler interface for cross platform specific implementations

@@ -1,20 +1,20 @@
 ﻿// Auto Generated, do not edit.
-using EosSharp.Core;
-using EosSharp.Core.Api.v1;
-using EosSharp.Core.Providers;
-using EosSharp.Unity3D;
+using FioSharp.Core;
+using FioSharp.Core.Api.v1;
+using FioSharp.Core.Providers;
+using FioSharp.Unity3D;
 using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
-namespace EosSharp.UnitTests.Unity3D
+namespace FioSharp.UnitTests.Unity3D
 {
     public class ApiUnitTests
     {
         ApiUnitTestCases ApiUnitTestCases;
         public ApiUnitTests()
         {
-            var eosConfig = new EosConfigurator()
+            var eosConfig = new FioConfigurator()
             {
                 SignProvider = new DefaultSignProvider("5K57oSZLpfzePvQNpsLS6NfKXLhhRARNU13q6u2ZPQCGHgKLbTA"),
 
@@ -24,7 +24,7 @@ namespace EosSharp.UnitTests.Unity3D
                 HttpEndpoint = "https://nodeos01.btuga.io",
                 ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
             };
-            var eosApi = new EosApi(eosConfig, new HttpHandler());
+            var eosApi = new FioApi(eosConfig, new HttpHandler());
 
             ApiUnitTestCases = new ApiUnitTestCases(eosConfig, eosApi);
         }

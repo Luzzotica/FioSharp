@@ -1,13 +1,13 @@
 using NUnit.Framework;
-using EosSharp.Core;
-using EosSharp.Core.Api.v1;
-using EosSharp.Core.Providers;
+using FioSharp.Core;
+using FioSharp.Core.Api.v1;
+using FioSharp.Core.Providers;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
 
-namespace EosSharp.UnitTests
+namespace FioSharp.UnitTests
 {
     public class Tests
     {
@@ -17,7 +17,7 @@ namespace EosSharp.UnitTests
         [SetUp]
         public void Setup()
         {
-            var eosConfig = new EosConfigurator()
+            var eosConfig = new FioConfigurator()
             {
                 SignProvider = new DefaultSignProvider(new List<string>() {
                     "5JtUScZK2XEp3g9gh7F8bwtPTRAkASmNrrftmx4AxDKD5K4zDnr",
@@ -33,7 +33,7 @@ namespace EosSharp.UnitTests
                 //HttpEndpoint = "http://localhost:8888",
                 //ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
             };
-            var eosApi = new EosApi(eosConfig, new HttpHandler());
+            var eosApi = new FioApi(eosConfig, new HttpHandler());
 
             ApiUnitTestCases = new ApiUnitTestCases(eosConfig, eosApi);
         }

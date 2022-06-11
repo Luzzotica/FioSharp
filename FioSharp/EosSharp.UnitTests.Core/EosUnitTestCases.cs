@@ -1,11 +1,11 @@
-﻿using EosSharp.Core;
-using EosSharp.Core.Api.v1;
+﻿using FioSharp.Core;
+using FioSharp.Core.Api.v1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EosSharp.UnitTests
+namespace FioSharp.UnitTests
 {
     public class EosUnitTestCases
     {

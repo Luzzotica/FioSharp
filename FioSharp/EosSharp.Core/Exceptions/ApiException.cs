@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace EosSharp.Core.Exceptions
+namespace FioSharp.Core.Exceptions
 {
     /// <summary>
     /// Generic Api exception

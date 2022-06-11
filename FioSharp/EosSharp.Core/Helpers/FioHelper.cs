@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using EosSharp.Core.Api.v1;
+using FioSharp.Core.Api.v1;
 
-namespace EosSharp.Core.Helpers
+namespace FioSharp.Core.Helpers
 {
     public class FioHelper
     {
+        public const string FIO_REQ_OBT_CONTRACT = "fio.reqobt";
+
         public const string NEW_FUNDS_CONTENT = "new_funds_content";
         public const string RECORD_OBT_DATA_CONTENT = "record_obt_data_content";
         public static AbiStruct GetFioAbiStruct(string contentType)
@@ -64,9 +66,9 @@ namespace EosSharp.Core.Helpers
             recordObtDataContent.fields.Add(MakeAbiField("token_code", "string"));
             recordObtDataContent.fields.Add(MakeAbiField("status", "string"));
             recordObtDataContent.fields.Add(MakeAbiField("obt_id", "string"));
-            recordObtDataContent.fields.Add(MakeAbiField("memo", "string"));
-            recordObtDataContent.fields.Add(MakeAbiField("hash", "string"));
-            recordObtDataContent.fields.Add(MakeAbiField("offline_url", "string"));
+            recordObtDataContent.fields.Add(MakeAbiField("memo", "string?"));
+            recordObtDataContent.fields.Add(MakeAbiField("hash", "string?"));
+            recordObtDataContent.fields.Add(MakeAbiField("offline_url", "string?"));
 
             return recordObtDataContent;
         }

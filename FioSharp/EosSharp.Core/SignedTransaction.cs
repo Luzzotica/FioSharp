@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EosSharp.Core
+namespace FioSharp.Core
 {
     public class SignedTransaction
     {

@@ -1,7 +1,7 @@
 ﻿using Cryptography.ECDSA;
-using EosSharp.Core.Exceptions;
-using EosSharp.Core.Helpers;
-using EosSharp.Core.Interfaces;
+using FioSharp.Core.Exceptions;
+using FioSharp.Core.Helpers;
+using FioSharp.Core.Interfaces;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace EosSharp.Unity3D
+namespace FioSharp.Unity3D
 {
     public class HttpHandler : IHttpHandler
     {

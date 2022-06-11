@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EosSharp.Core.Interfaces
+namespace FioSharp.Core.Interfaces
 {
     /// <summary>
     /// Signature provider Interface to delegate multiple signing implementations

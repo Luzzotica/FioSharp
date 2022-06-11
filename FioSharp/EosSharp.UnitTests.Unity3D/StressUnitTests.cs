@@ -1,19 +1,19 @@
-﻿using EosSharp.Core;
-using EosSharp.Core.Providers;
-using EosSharp.Unity3D;
+﻿using FioSharp.Core;
+using FioSharp.Core.Providers;
+using FioSharp.Unity3D;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace EosSharp.UnitTests.Unity3D
+namespace FioSharp.UnitTests.Unity3D
 {
     public class StressUnitTests
     {
-        Eos Eos { get; set; }
+        Fio Eos { get; set; }
         public StressUnitTests()
         {
-            Eos = new Eos(new EosConfigurator()
+            Eos = new Fio(new FioConfigurator()
             {
                 SignProvider = new DefaultSignProvider("5K57oSZLpfzePvQNpsLS6NfKXLhhRARNU13q6u2ZPQCGHgKLbTA"),
 

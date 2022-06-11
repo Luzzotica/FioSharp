@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
+using FioSharp.Secp256k1.Models;
 //using Cryptography.ECDSA.Internal.Secp256K1;
 //using NBitcoin.Secp256k1;
 using NBitcoin;
@@ -11,26 +12,6 @@ namespace FioSharp.Secp256k1
 {
     public class Secp256K1Manager
     {
-        //private static readonly Context Ctx;
-
-        public static event EventHandler<Callback> IllegalCallback;
-        public static event EventHandler<Callback> ErrorCallback;
-
-        static Secp256K1Manager()
-        {
-            IllegalCallback += OnIllegalCallback;
-            ErrorCallback += OnErrorCallback;
-            //Ctx = Context.Instance; //Secp256K1ContextCreate(); // (Options.ContextSign | Options.ContextVerify);
-        }
-
-        private static void OnErrorCallback(object sender, Callback secp256K1Callback)
-        {
-        }
-
-        private static void OnIllegalCallback(object sender, Callback secp256K1Callback)
-        {
-        }
-
         /// <summary>Signs a data and returns the signature in compact form.  Returns null on failure.</summary>
         /// <param name="data">The data to sign.  This data is not hashed.  For use with bitcoins, you probably want to double-SHA256 hash this before calling this method.</param>
         /// <param name="seckey">The private key to use to sign the data.</param>
@@ -84,7 +65,7 @@ namespace FioSharp.Secp256k1
             return output65;
         }
 
-        public static byte[] GetPublicKey(byte[] privateKey, bool compressed)
+        public static byte[] GetPublicKey(byte[] privateKey)
         {
             if (privateKey == null)
                 throw new ArgumentNullException(nameof(privateKey));
@@ -111,6 +92,19 @@ namespace FioSharp.Secp256k1
             var key = new byte[32];
             rand.GetBytes(key);
             return key;
+        }
+
+        public static string CreateMnemonic(byte[] entropy)
+        {
+            Mnemonic m = new Mnemonic(Wordlist.English, entropy: entropy);
+            return m.ToString();
+        }
+
+        public static byte[] CreatePrivateKeyMnemonic(string mnemonic)
+        {
+            Mnemonic m = new Mnemonic(mnemonic);
+            ExtKey key = m.DeriveExtKey().Derive(new KeyPath("m/44\'/235\'/0\'/0/0"));
+            return key.PrivateKey.ToBytes();
         }
     }
 }

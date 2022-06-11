@@ -1,13 +1,13 @@
 ﻿using FioSharp.Secp256k1;
-using EosSharp.Core.Helpers;
-using EosSharp.Core.Interfaces;
+using FioSharp.Core.Helpers;
+using FioSharp.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EosSharp.Core.Providers
+namespace FioSharp.Core.Providers
 {
     /// <summary>
     /// Signature provider default implementation that stores private keys in memory
@@ -24,7 +24,7 @@ namespace EosSharp.Core.Providers
         public DefaultSignProvider(string privateKey)
         {
             var privKeyBytes = CryptoHelper.GetPrivateKeyBytesWithoutCheckSum(privateKey);
-            var pubKey = CryptoHelper.PubKeyBytesToString(Secp256K1Manager.GetPublicKey(privKeyBytes, true));
+            var pubKey = CryptoHelper.PubKeyBytesToString(Secp256K1Manager.GetPublicKey(privKeyBytes));
             Keys.Add(pubKey, privKeyBytes);
         }
 
@@ -40,7 +40,7 @@ namespace EosSharp.Core.Providers
             foreach(var key in privateKeys)
             {
                 var privKeyBytes = CryptoHelper.GetPrivateKeyBytesWithoutCheckSum(key);
-                var pubKey = CryptoHelper.PubKeyBytesToString(Secp256K1Manager.GetPublicKey(privKeyBytes, true));
+                var pubKey = CryptoHelper.PubKeyBytesToString(Secp256K1Manager.GetPublicKey(privKeyBytes));
                 Keys.Add(pubKey, privKeyBytes);
             }
         }

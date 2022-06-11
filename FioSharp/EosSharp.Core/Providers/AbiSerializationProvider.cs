@@ -1,6 +1,6 @@
-﻿using EosSharp.Core.Api.v1;
-using EosSharp.Core.DataAttributes;
-using EosSharp.Core.Helpers;
+﻿using FioSharp.Core.Api.v1;
+using FioSharp.Core.DataAttributes;
+using FioSharp.Core.Helpers;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +11,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace EosSharp.Core.Providers
+namespace FioSharp.Core.Providers
 {
     /// <summary>
     /// Serialize / deserialize transaction and fields using a Abi schema
@@ -27,7 +27,7 @@ namespace EosSharp.Core.Providers
 
         private delegate object ReaderDelegate(byte[] data, ref int readIndex);
 
-        private EosApi Api { get; set; }
+        private FioApi Api { get; set; }
         private Dictionary<string, Action<MemoryStream, object>> TypeWriters { get; set; }
         private Dictionary<string, ReaderDelegate> TypeReaders { get; set; }
 
@@ -35,7 +35,7 @@ namespace EosSharp.Core.Providers
         /// Construct abi serialization provided using EOS api
         /// </summary>
         /// <param name="api"></param>
-        public AbiSerializationProvider(EosApi api)
+        public AbiSerializationProvider(FioApi api)
         {
             this.Api = api;
 

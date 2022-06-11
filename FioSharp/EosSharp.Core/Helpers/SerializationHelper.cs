@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
-namespace EosSharp.Core.Helpers
+namespace FioSharp.Core.Helpers
 {
     public class SerializationHelper
     {

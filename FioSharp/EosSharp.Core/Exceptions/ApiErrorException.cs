@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace EosSharp.Core.Exceptions
+namespace FioSharp.Core.Exceptions
 {
     /// <summary>
     /// Wrapper exception for EOSIO api error

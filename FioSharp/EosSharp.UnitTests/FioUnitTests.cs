@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EosSharp.Core;
-using EosSharp.Core.Api.v1;
-using EosSharp.Core.Helpers;
-using EosSharp.Core.Providers;
+using FioSharp.Core;
+using FioSharp.Core.Api.v1;
+using FioSharp.Core.Helpers;
+using FioSharp.Core.Providers;
 using FioSharp.Secp256k1;
 using NBitcoin;
 using NBitcoin.Crypto;
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace EosSharp.UnitTests
+namespace FioSharp.UnitTests
 {
     public class FioUnitTests
     {
@@ -23,7 +23,7 @@ namespace EosSharp.UnitTests
         [SetUp]
         public void Setup()
         {
-            var eosConfig = new EosConfigurator()
+            var eosConfig = new FioConfigurator()
             {
                 SignProvider = new DefaultSignProvider(new List<string>() {
                     "5JtUScZK2XEp3g9gh7F8bwtPTRAkASmNrrftmx4AxDKD5K4zDnr",
@@ -38,7 +38,7 @@ namespace EosSharp.UnitTests
             };
             //var eosApi = new EosApi(eosConfig, new HttpHandler());
 
-            Fio = new Eos(eosConfig);
+            Fio = new Fio(eosConfig);
             
             privateKeyAlice = Hashes.SHA256(Encoding.ASCII.GetBytes("alice"));
             publicKeyAlice = new Key(privateKeyAlice).PubKey.ToBytes();
