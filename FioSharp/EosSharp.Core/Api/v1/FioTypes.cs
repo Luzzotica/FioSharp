@@ -1030,11 +1030,11 @@ namespace FioSharp.Core.Api.v1
 	[Serializable]
 	public class GetFioBalanceResponse
 	{
-		public string balance;
-		public string available;
-		public string staked;
+		public ulong balance;
+		public ulong available;
+		public ulong staked;
 		public int srps;
-		public int roe;
+		public string roe;
 	}
 	[Serializable]
 	public class GetFioNamesResponse

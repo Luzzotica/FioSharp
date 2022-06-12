@@ -52,7 +52,10 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await api.GetFioBalance(publicKey1);
+                GetFioBalanceResponse resp = await api.GetFioBalance(publicKey1);
+                //Console.WriteLine(resp.balance);
+                //Console.WriteLine(resp.available);
+                //Console.WriteLine(resp.roe);
                 success = true;
             }
             catch (ApiErrorException ex)
@@ -61,7 +64,8 @@ namespace FioSharp.UnitTests
             }
             catch (Exception ex)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
+                Console.WriteLine(ex.ToString());
+                //Console.WriteLine(JsonConvert.SerializeObject(ex));
             }
 
             Assert.IsTrue(success);

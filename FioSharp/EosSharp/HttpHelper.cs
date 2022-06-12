@@ -208,6 +208,7 @@ namespace FioSharp
         {
             var stream = await response.Content.ReadAsStreamAsync();
 
+            // If we succeeded, return the stream
             if (response.IsSuccessStatusCode)
                 return stream;
 
@@ -216,8 +217,10 @@ namespace FioSharp
             ApiErrorException apiError;
             try
             {
+                Console.WriteLine();
                 Console.WriteLine("Response Content:");
                 Console.WriteLine(content);
+                Console.WriteLine();
                 Console.WriteLine();
                 //Dictionary<string, dynamic> jsonResp = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
                 //apiError = new ApiErrorException((int)response.StatusCode, jsonResp);
