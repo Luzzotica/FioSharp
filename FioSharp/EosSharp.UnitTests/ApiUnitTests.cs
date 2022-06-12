@@ -6,13 +6,23 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System;
 using Newtonsoft.Json;
+using FioSharp.Core.Helpers;
+using System.Linq;
+using FioSharp.Core.Exceptions;
 
 namespace FioSharp.UnitTests
 {
     public class Tests
     {
-        
-        ApiUnitTestCases ApiUnitTestCases;
+        FioApi api;
+        const string privateKey1 = "5JRC9Kwmeo6CLPKx7TsJ4UybApmLcfxSJKgSMQi3QNtAh88r4Zu";
+        const string publicKey1 = "FIO5g9NUxPpbiupHicH4ZMjqaLYLAghbARXMvJMkZv5uPx4MAbnZg";
+        const string privateKey2 = "5KdDvp6ExuAPauN65HKKihVuDd28pTRmHyM8iooz8CBeW48w1Pt";
+        const string publicKey2 = "FIO589xEUThDc1UfsXSyEg69vDj5sFviutdwLf5mR7xrJJaEj882y";
+        const string fioAddress1 = "swag1@fiotestnet";
+        const string fioAddress2 = "swag2@fiotestnet";
+        const string actor1 = "bepto5rwh5gy";
+        const string actor2 = "zbu3hi2wwww1";
 
         [SetUp]
         public void Setup()
@@ -20,8 +30,8 @@ namespace FioSharp.UnitTests
             var eosConfig = new FioConfigurator()
             {
                 SignProvider = new DefaultSignProvider(new List<string>() {
-                    "5JtUScZK2XEp3g9gh7F8bwtPTRAkASmNrrftmx4AxDKD5K4zDnr",
-                    "5JRC9Kwmeo6CLPKx7TsJ4UybApmLcfxSJKgSMQi3QNtAh88r4Zu"
+                    privateKey1,
+                    privateKey2
                 }),
 
                 //HttpEndpoint = "https://nodes.eos42.io", //Mainnet
@@ -33,11 +43,408 @@ namespace FioSharp.UnitTests
                 //HttpEndpoint = "http://localhost:8888",
                 //ChainId = "cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f"
             };
-            var eosApi = new FioApi(eosConfig, new HttpHandler());
-
-            ApiUnitTestCases = new ApiUnitTestCases(eosConfig, eosApi);
+            api = new FioApi(eosConfig, new HttpHandler());
         }
 
+        [Test]
+        public async Task GetFioBalance()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetFioBalance(publicKey1);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetFioNames()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetFioNames(publicKey1);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetFioAddresses()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetFioAddresses(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetFioDomains()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetFioDomains(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task AvailCheck()
+        {
+            bool success = false;
+            try
+            {
+                await api.AvailCheck("swag1@tester");
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(e));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetPublicAddress()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetPublicAddress(fioAddress1, "FIO", "FIO");
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetPublicAddresses()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetPublicAddresses(fioAddress1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetSentFioRequests()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetSentFioRequests(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetReceivedFioRequests()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetReceivedFioRequests(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetPendingFioRequests()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetPendingFioRequests(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetCancelledFioRequests()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetCancelledFioRequests(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetObtData()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetObtData(publicKey1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetLocks()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetLocks(publicKey1);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetFee()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetFee(Accounts.FioAddress.ADDADDRESS, fioAddress1);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetNftsFioAddress()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetNftsFioAddress(fioAddress1, 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetNftsContract()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetNftsContract("", "", "", 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetNftsHash()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetNftsHash("", 10, 0);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetActor()
+        {
+            bool success = false;
+            try
+            {
+                string actor = (await api.GetActor(publicKey1)).actor;
+                Assert.AreEqual(actor1, actor);
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
+
+        [Test]
+        public async Task GetAccount()
+        {
+            bool success = false;
+            try
+            {
+                await api.GetAccount("fio.token");
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
+                success = true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(JsonConvert.SerializeObject(ex));
+            }
+
+            Assert.IsTrue(success);
+        }
 
         [Test]
         public async Task GetInfo()
@@ -45,7 +452,11 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await ApiUnitTestCases.GetInfo();
+                await api.GetInfo();
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
                 success = true;
             }
             catch (Exception ex)
@@ -55,29 +466,19 @@ namespace FioSharp.UnitTests
 
             Assert.IsTrue(success);
         }
+
         [Test]
-        public async Task GetAccount()
+        public async Task GetBlock()
         {
             bool success = false;
             try
             {
-                await ApiUnitTestCases.GetAccount();
+                var getInfoResult = await api.GetInfo();
+                var getBlockResult = await api.GetBlock(getInfoResult.last_irreversible_block_num.ToString());
                 success = true;
             }
-            catch (Exception ex)
+            catch (ApiErrorException ex)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetCode()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetCode();
                 success = true;
             }
             catch (Exception ex)
@@ -93,8 +494,8 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                GetAbiResponse resp = await ApiUnitTestCases.GetReqObtAbi();
-                foreach (AbiStruct s in resp.abi.structs)
+                Abi resp = await api.GetAbi("fio.reqobt");
+                foreach (AbiStruct s in resp.structs)
                 {
                     Console.WriteLine();
                     Console.WriteLine(s.name);
@@ -109,20 +510,8 @@ namespace FioSharp.UnitTests
                 }
                 success = true;
             }
-            catch (Exception ex)
+            catch (ApiErrorException ex)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetRawCodeAndAbi()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetRawCodeAndAbi();
                 success = true;
             }
             catch (Exception ex)
@@ -138,151 +527,11 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await ApiUnitTestCases.GetRawAbi();
+                await api.GetRawAbi("fio.token");
                 success = true;
             }
-            catch (Exception ex)
+            catch (ApiErrorException ex)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task AbiJsonToBin()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.AbiJsonToBin();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task AbiBinToJson()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.AbiBinToJson();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetRequiredKeys()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetRequiredKeys();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetBlock()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetBlock();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetBlockHeaderState()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetBlockHeaderState();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetTableRows()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetTableRows();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetTableByScope()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetTableByScope();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetCurrencyBalance()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetCurrencyBalance();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetCurrencyStats()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetCurrencyStats();
                 success = true;
             }
             catch (Exception ex)
@@ -298,39 +547,11 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await ApiUnitTestCases.GetProducers();
+                await api.GetProducers("10", "0");
                 success = true;
             }
-            catch (Exception ex)
+            catch (ApiErrorException ex)
             {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetProducerSchedule()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetProducerSchedule();
-                success = true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(JsonConvert.SerializeObject(ex));
-            }
-
-            Assert.IsTrue(success);
-        }
-        [Test]
-        public async Task GetScheduledTransactions()
-        {
-            bool success = false;
-            try
-            {
-                await ApiUnitTestCases.GetScheduledTransactions();
                 success = true;
             }
             catch (Exception ex)
@@ -346,7 +567,11 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                PushTransactionResponse resp = await ApiUnitTestCases.PushTransaction();
+                await CreateTransaction();
+                success = true;
+            }
+            catch (ApiErrorException ex)
+            {
                 success = true;
             }
             catch (Exception ex)
@@ -356,22 +581,51 @@ namespace FioSharp.UnitTests
 
             Assert.IsTrue(success);
         }
-        //[Test]
-        //public async Task GetControlledAccounts()
-        //{
-        //    bool success = false;
-        //    try
-        //    {
-        //        await ApiUnitTestCases.GetControlledAccounts();
-        //        success = true;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine(JsonConvert.SerializeObject(ex));
-        //    }
+        private async Task<PushTransactionResponse> CreateTransaction()
+        {
+            var getInfoResult = await api.GetInfo();
+            var getBlockResult = await api.GetBlock(getInfoResult.last_irreversible_block_num.ToString());
 
-        //    Assert.IsTrue(success);
-        //}
+            var trx = new Transaction()
+            {
+                //trx headers
+                expiration = getInfoResult.head_block_time.AddSeconds(60), //expire Seconds
+                ref_block_num = (UInt16)(getInfoResult.last_irreversible_block_num & 0xFFFF),
+                ref_block_prefix = getBlockResult.ref_block_prefix,
+                // trx info
+                max_net_usage_words = 0,
+                max_cpu_usage_ms = 0,
+                delay_sec = 0,
+                context_free_actions = new List<Core.Api.v1.Action>(),
+                transaction_extensions = new List<Extension>(),
+                actions = new List<Core.Api.v1.Action>()
+                {
+                    new Core.Api.v1.Action()
+                    {
+                        account = "fio.token",
+                        name = "trnsfiopubky",
+                        authorization = new List<PermissionLevel>()
+                        {
+                            new PermissionLevel() {actor = "bepto5rwh5gy", permission = "active" }
+                        },
+                        data = new Dictionary<string, object>() {
+                            { "actor", "bepto5rwh5gy" },
+                            { "payee_public_key", "FIO589xEUThDc1UfsXSyEg69vDj5sFviutdwLf5mR7xrJJaEj882y" },
+                            { "amount", 1000000000 },
+                            { "max_fee", 1000000000000 },
+                            { "tpid", "" },
+                        }
+                    }
+                }
+            };
+
+            var abiSerializer = new AbiSerializationProvider(api);
+            var packedTrx = await abiSerializer.SerializePackedTransaction(trx);
+            var requiredKeys = new List<string>() { "FIO5g9NUxPpbiupHicH4ZMjqaLYLAghbARXMvJMkZv5uPx4MAbnZg" };
+            var signatures = await api.Config.SignProvider.Sign(api.Config.ChainId, requiredKeys, packedTrx);
+
+            return await api.PushTransaction(signatures.ToArray(), SerializationHelper.ByteArrayToHexString(packedTrx));
+        }
 
     }
 }

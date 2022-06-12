@@ -154,16 +154,16 @@ namespace FioSharp.Core.Api.v1
 		
 		public string body;
     }
-	[Serializable]
-	public class CurrencyStat
-    {
+	//[Serializable]
+	//public class CurrencyStat
+ //   {
 		
-		public string supply;
+	//	public string supply;
 		
-		public string max_supply;
+	//	public string max_supply;
 		
-		public string issuer;
-    }
+	//	public string issuer;
+ //   }
 	[Serializable]
 	public class Producer
     {
@@ -260,26 +260,26 @@ namespace FioSharp.Core.Api.v1
 		
 		public List<Extension> transaction_extensions = new List<Extension>();
     }
-	[Serializable]
-	public class ScheduledTransaction
-    {
+	//[Serializable]
+	//public class ScheduledTransaction
+ //   {
 		
-		public string trx_id;
+	//	public string trx_id;
 		
-		public string sender;
+	//	public string sender;
 		
-		public string sender_id;
+	//	public string sender_id;
 		
-		public string payer;
+	//	public string payer;
 		
-		public DateTime? delay_until;
+	//	public DateTime? delay_until;
 		
-		public DateTime? expiration;
+	//	public DateTime? expiration;
 		
-		public DateTime? published;
+	//	public DateTime? published;
 		
-		public Object transaction;
-    }
+	//	public Object transaction;
+ //   }
 	[Serializable]
 	public class Receipt
     {
@@ -318,20 +318,20 @@ namespace FioSharp.Core.Api.v1
 		
 		public List<ActionTrace> inline_traces;
     }
-	[Serializable]
-	public class GlobalAction
-    {
+	//[Serializable]
+	//public class GlobalAction
+ //   {
 		
-		public UInt64? global_action_seq;
+	//	public UInt64? global_action_seq;
 		
-		public UInt64? account_action_seq;
+	//	public UInt64? account_action_seq;
 		
-		public UInt32? block_num;
+	//	public UInt32? block_num;
 		
-		public DateTime? block_time;
+	//	public DateTime? block_time;
 		
-		public ActionTrace action_trace;
-    }
+	//	public ActionTrace action_trace;
+ //   }
 	[Serializable]
 	public class TransactionReceipt
     {
@@ -397,30 +397,30 @@ namespace FioSharp.Core.Api.v1
 		public string net_amount;
     }
 	[Serializable]
-	public class SelfDelegatedBandwidth
+    public class SelfDelegatedBandwidth
     {
-		
-		public string cpu_weight;
-		
-		public string from;
-		
-		public string net_weight;
-		
-		public string to;
+
+        public string cpu_weight;
+
+        public string from;
+
+        public string net_weight;
+
+        public string to;
     }
-	[Serializable]
-	public class TotalResources
+    [Serializable]
+    public class TotalResources
     {
-		
-		public string cpu_weight;
-		
-		public string net_weight;
-		
-		public string owner;
-		
-		public UInt64? ram_bytes;
+
+        public string cpu_weight;
+
+        public string net_weight;
+
+        public string owner;
+
+        public UInt64? ram_bytes;
     }
-	[Serializable]
+    [Serializable]
 	public class VoterInfo
     {
 		
@@ -439,28 +439,28 @@ namespace FioSharp.Core.Api.v1
 		public UInt64? staked;
     }
 	[Serializable]
-	public class ExtendedAsset
+    public class ExtendedAsset
     {
-		
-		public string quantity;
-		
-		public string contract;
+
+        public string quantity;
+
+        public string contract;
     }
-	[Serializable]
-	public class TableByScopeResultRow
-    {
-		
-		public string code;
-		
-		public string scope;
-		
-		public string table;
-		
-		public string payer;
-		
-		public UInt32? count;
-    }
-	[Serializable]
+    //[Serializable]
+    //public class TableByScopeResultRow
+    //   {
+
+    //	public string code;
+
+    //	public string scope;
+
+    //	public string table;
+
+    //	public string payer;
+
+    //	public UInt32? count;
+    //   }
+    [Serializable]
 	public class BlockHeader
     {
 		
@@ -520,6 +520,80 @@ namespace FioSharp.Core.Api.v1
 		
 		public List<string> protocol_features;
     }
+	[Serializable]
+	public class FioDomain
+	{
+		public string fio_domain;
+		public string expiration;
+		public int is_public;
+	}
+	[Serializable]
+	public class FioAddress
+	{
+		public string fio_address;
+		public string expiration;
+		public int remaining_bundled_tx;
+	}
+	[Serializable]
+	public class PublicAddress
+    {
+		public string public_address;
+		public string chain_code;
+		public string token_code;
+	}
+	[Serializable]
+	public class FioRequest
+    {
+		public int fio_request_id;
+		public string payer_fio_address;
+		public string payee_fio_address;
+		public string payer_fio_public_key;
+		public string payee_fio_public_key;
+		public string content;
+		public DateTime time_stamp;
+		public string status;
+	}
+	[Serializable]
+	public class FioRequestContent
+    {
+		public object payee_public_address;
+		public string amount;
+		public string token_code;
+		public string memo;
+		public string hash;
+		public string offline_url;
+    }
+	[Serializable]
+	public class ObtData
+	{
+		public int fio_request_id;
+		public string payer_fio_address;
+		public string payee_fio_address;
+		public string payer_fio_public_key;
+		public string payee_fio_public_key;
+		public ObtDataContent content;
+		public string status;
+		public DateTime time_stamp;
+	}
+	[Serializable]
+	public class ObtDataContent
+    {
+		public string payer_public_address;
+		public string payee_public_address;
+		public string amount;
+		public string token_code;
+		public string status;
+		public string obt_id;
+		public string memo;
+		public string hash;
+		public string offline_url;
+	}
+	[Serializable]
+	public class LockPayoutPeriod
+	{
+		public int duration;
+		public int amount;
+	}
 	#endregion
 
 	#region generate api method types
@@ -594,26 +668,26 @@ namespace FioSharp.Core.Api.v1
  
 		public VoterInfo voter_info;
     }
-	[Serializable]
-    public class GetCodeRequest
-    {
-		public string account_name;
-		public bool code_as_wasm;
-    }
-	[Serializable]
-    public class GetCodeResponse
-    {
+	//[Serializable]
+ //   public class GetCodeRequest
+ //   {
+	//	public string account_name;
+	//	public bool code_as_wasm;
+ //   }
+	//[Serializable]
+ //   public class GetCodeResponse
+ //   {
  
-		public string account_name;
+	//	public string account_name;
  
-		public string wast;
+	//	public string wast;
  
-		public string wasm;
+	//	public string wasm;
  
-		public string code_hash;
+	//	public string code_hash;
  
-		public Abi abi;
-    }
+	//	public Abi abi;
+ //   }
 	[Serializable]
     public class GetAbiRequest
     {
@@ -627,21 +701,21 @@ namespace FioSharp.Core.Api.v1
  
 		public Abi abi;
     }
-	[Serializable]
-    public class GetRawCodeAndAbiRequest
-    {
-		public string account_name;
-    }
-	[Serializable]
-    public class GetRawCodeAndAbiResponse
-    {
+	//[Serializable]
+ //   public class GetRawCodeAndAbiRequest
+ //   {
+	//	public string account_name;
+ //   }
+	//[Serializable]
+ //   public class GetRawCodeAndAbiResponse
+ //   {
  
-		public string account_name;
+	//	public string account_name;
  
-		public string wasm;
+	//	public string wasm;
  
-		public string abi;
-    }
+	//	public string abi;
+ //   }
 	[Serializable]
     public class GetRawAbiRequest
     {
@@ -686,18 +760,18 @@ namespace FioSharp.Core.Api.v1
  
 		public object args;
     }
-	[Serializable]
-    public class GetRequiredKeysRequest
-    {
-		public Transaction transaction;
-		public List<string> available_keys;
-    }
-	[Serializable]
-    public class GetRequiredKeysResponse
-    {
+	//[Serializable]
+ //   public class GetRequiredKeysRequest
+ //   {
+	//	public Transaction transaction;
+	//	public List<string> available_keys;
+ //   }
+	//[Serializable]
+ //   public class GetRequiredKeysResponse
+ //   {
  
-		public List<string> required_keys;
-    }
+	//	public List<string> required_keys;
+ //   }
 	[Serializable]
     public class GetBlockRequest
     {
@@ -706,7 +780,6 @@ namespace FioSharp.Core.Api.v1
 	[Serializable]
     public class GetBlockResponse
     {
- 
 		public DateTime timestamp;
  
 		public string producer;
@@ -776,82 +849,82 @@ namespace FioSharp.Core.Api.v1
  
 		public List<List<string>> producer_to_last_implied_irb;
     }
-	[Serializable]
-    public class GetTableRowsRequest
-    {
-		public bool json = false;
-		public string code;
-		public string scope;
-		public string table;
-		public string table_key;
-		public string lower_bound = "0";
-		public string upper_bound = "-1";
-		public Int32 limit = 10;
-		public string key_type;
-		public string index_position;
-		public string encode_type = "dec";
-		public bool reverse;
-		public bool show_payer;
-    }
-	[Serializable]
-    public class GetTableRowsResponse
-    {
+	//[Serializable]
+ //   public class GetTableRowsRequest
+ //   {
+	//	public bool json = false;
+	//	public string code;
+	//	public string scope;
+	//	public string table;
+	//	public string table_key;
+	//	public string lower_bound = "0";
+	//	public string upper_bound = "-1";
+	//	public Int32 limit = 10;
+	//	public string key_type;
+	//	public string index_position;
+	//	public string encode_type = "dec";
+	//	public bool reverse;
+	//	public bool show_payer;
+ //   }
+	//[Serializable]
+ //   public class GetTableRowsResponse
+ //   {
  
-		public List<object> rows;
+	//	public List<object> rows;
  
-		public bool more;
-    }
-	[Serializable]
-    public class GetTableRowsResponse<TRowType>
-    {
+	//	public bool more;
+ //   }
+	//[Serializable]
+ //   public class GetTableRowsResponse<TRowType>
+ //   {
    
-		public List<TRowType> rows;
+	//	public List<TRowType> rows;
    
-		public bool more;
-    }
-	[Serializable]
-    public class GetTableByScopeRequest
-    {
-		public string code;
-		public string table;
-		public string lower_bound;
-		public string upper_bound;
-		public Int32 limit = 10;
-		public bool reverse;
-    }
-	[Serializable]
-    public class GetTableByScopeResponse
-    {
+	//	public bool more;
+ //   }
+	//[Serializable]
+ //   public class GetTableByScopeRequest
+ //   {
+	//	public string code;
+	//	public string table;
+	//	public string lower_bound;
+	//	public string upper_bound;
+	//	public Int32 limit = 10;
+	//	public bool reverse;
+ //   }
+	//[Serializable]
+ //   public class GetTableByScopeResponse
+ //   {
  
-		public List<TableByScopeResultRow> rows;
+	//	public List<TableByScopeResultRow> rows;
  
-		public string more;
-    }
-	[Serializable]
-    public class GetCurrencyBalanceRequest
-    {
-		public string code;
-		public string account;
-		public string symbol;
-    }
-	[Serializable]
-    public class GetCurrencyBalanceResponse
-    {
+	//	public string more;
+ //   }
+	//[Serializable]
+ //   public class GetCurrencyBalanceRequest
+ //   {
+	//	public string code;
+	//	public string account;
+	//	public string symbol;
+ //   }
+	//[Serializable]
+ //   public class GetCurrencyBalanceResponse
+ //   {
  
-		public List<string> assets;
-    }
-	[Serializable]
-    public class GetCurrencyStatsRequest
-    {
-		public string code;
-		public string symbol;
-    }
-	[Serializable]
-    public class GetCurrencyStatsResponse
-    {
+	//	public List<string> assets;
+ //   }
+	//[Serializable]
+ //   public class GetCurrencyStatsRequest
+ //   {
+	//	public string code;
+	//	public string symbol;
+ //   }
+	//[Serializable]
+ //   public class GetCurrencyStatsResponse
+ //   {
  
-		public Dictionary<string, CurrencyStat> stats;
-    }
+	//	public Dictionary<string, CurrencyStat> stats;
+ //   }
 	[Serializable]
     public class GetProducersRequest
     {
@@ -869,31 +942,31 @@ namespace FioSharp.Core.Api.v1
  
 		public string more;
     }
-	[Serializable]
-    public class GetProducerScheduleResponse
-    {
+	//[Serializable]
+ //   public class GetProducerScheduleResponse
+ //   {
  
-		public Schedule active;
+	//	public Schedule active;
  
-		public Schedule pending;
+	//	public Schedule pending;
  
-		public Schedule proposed;
-    }
-	[Serializable]
-    public class GetScheduledTransactionsRequest
-    {
-		public bool json = false;
-		public string lower_bound;
-		public Int32 limit = 50;
-    }
-	[Serializable]
-    public class GetScheduledTransactionsResponse
-    {
+	//	public Schedule proposed;
+ //   }
+	//[Serializable]
+ //   public class GetScheduledTransactionsRequest
+ //   {
+	//	public bool json = false;
+	//	public string lower_bound;
+	//	public Int32 limit = 50;
+ //   }
+	//[Serializable]
+ //   public class GetScheduledTransactionsResponse
+ //   {
  
-		public List<ScheduledTransaction> transactions;
+	//	public List<ScheduledTransaction> transactions;
  
-		public string more;
-    }
+	//	public string more;
+ //   }
 	[Serializable]
     public class PushTransactionRequest
     {
@@ -910,23 +983,6 @@ namespace FioSharp.Core.Api.v1
 		public string transaction_id;
  
 		public ProcessedTransaction processed;
-    }
-	[Serializable]
-    public class GetActionsRequest
-    {
-		public string account_name;
-		public Int32 pos;
-		public Int32 offset;
-    }
-	[Serializable]
-    public class GetActionsResponse
-    {
- 
-		public List<GlobalAction> actions;
- 
-		public UInt32 last_irreversible_block;
- 
-		public bool time_limit_exceeded_error;
     }
 	[Serializable]
     public class GetTransactionRequest
@@ -950,38 +1006,33 @@ namespace FioSharp.Core.Api.v1
  
 		public List<ActionTrace> traces;
     }
-	[Serializable]
-    public class GetKeyAccountsRequest
-    {
-		public string public_key;
-    }
-	[Serializable]
-    public class GetKeyAccountsResponse
-    {
- 
-		public List<string> account_names;
-    }
-	[Serializable]
-    public class GetControlledAccountsRequest
-    {
-		public string controlling_account;
-    }
-	[Serializable]
-    public class GetControlledAccountsResponse
-    {
-		public List<string> controlled_accounts;
-    }
-	[Serializable]
-	public class APIRequestWithPublicKey
-	{
-		public string fio_public_key;
-	}
+	//[Serializable]
+ //   public class GetKeyAccountsRequest
+ //   {
+	//	public string public_key;
+ //   }
+	//[Serializable]
+ //   public class GetKeyAccountsResponse
+ //   {
+	//	public List<string> account_names;
+ //   }
+	//[Serializable]
+ //   public class GetControlledAccountsRequest
+ //   {
+	//	public string controlling_account;
+ //   }
+	//[Serializable]
+ //   public class GetControlledAccountsResponse
+ //   {
+	//	public List<string> controlled_accounts;
+ //   }
+	
 	[Serializable]
 	public class GetFioBalanceResponse
 	{
-		public int balance;
-		public int available;
-		public int staked;
+		public string balance;
+		public string available;
+		public string staked;
 		public int srps;
 		public int roe;
 	}
@@ -990,20 +1041,6 @@ namespace FioSharp.Core.Api.v1
 	{
 		public List<FioDomain> fio_domains;
 		public List<FioAddress> fio_addresses;
-	}
-	[Serializable]
-	public class FioDomain
-    {
-		public string fio_domain;
-		public string expiration;
-		public int is_public;
-    }
-	[Serializable]
-	public class FioAddress
-	{
-		public string fio_address;
-		public string expiration;
-		public int remaining_bundled_tx;
 	}
 	[Serializable]
 	public class GetFioAddressesResponse
@@ -1040,10 +1077,76 @@ namespace FioSharp.Core.Api.v1
 		public string public_address;
 	}
 	[Serializable]
+	public class GetPubAddressesResponse
+	{
+		public List<PublicAddress> public_addresses;
+	}
+	/// <summary>
+    /// Used for get sent, received, pending, and canceled endpoints
+    /// </summary>
+	[Serializable]
+	public class GetFioRequestsResponse
+    {
+		public List<FioRequest> requests;
+		public int more;
+    }
+	[Serializable]
+	public class GetObtDataResponse
+    {
+		public List<ObtData> obt_data_records;
+		public int more;
+    }
+	[Serializable]
+	public class GetLocksResponse
+    {
+		public int lock_amount;
+		public int remaining_lock_amound;
+		public DateTime time_stamp;
+		public int payouts_performed;
+		public int can_vote;
+		public List<LockPayoutPeriod> unlock_periods;
+    }
+	[Serializable]
+	public class GetFeeResponse
+    {
+		public int fee;
+    }
+	[Serializable]
+	public class GetNftsResponse
+    {
+		public List<NFTData> nfts;
+		public int more;
+    }
+	[Serializable]
+    public class NFTData
+    {
+		public string chain_code;
+		public string contract_address;
+		public string token_id;
+		public string url;
+		public string hash;
+		public string metadata;
+    }
+
+    [Serializable]
 	public class GetActorResponse
 	{
 		public string actor;
 	}
+	[Serializable]
+	public class ErrorResponse
+    {
+		public string type;
+		public string message;
+		public List<ErrorResponseField> fields;
+    }
+	[Serializable]
+	public class ErrorResponseField
+    {
+		public string name;
+		public string value;
+		public string error;
+    }
 	#endregion
 }
 

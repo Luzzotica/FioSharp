@@ -1,5 +1,4 @@
-﻿using Cryptography.ECDSA;
-using FioSharp.Core.Exceptions;
+﻿using FioSharp.Core.Exceptions;
 using FioSharp.Core.Helpers;
 using FioSharp.Core.Interfaces;
 using Newtonsoft.Json;

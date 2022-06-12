@@ -11,33 +11,45 @@ namespace FioSharp.Core.Exceptions
     public class ApiErrorException : Exception
     {
         public int code;
+        public string type;
         public string message;
-        public ApiError error;
+        public List<ApiErrorField> fields;
 
-        public ApiErrorException()
-        {
-
-        }
+        //public ApiErrorException(int responseCode, Dictionary<string, dynamic> jsonResp)
+        //{
+        //    code = responseCode;
+        //    message = jsonResp.ContainsKey("message") ? jsonResp["message"] : "";
+        //    type = jsonResp.ContainsKey("type") ? jsonResp["type"] : "";
+        //    fields = jsonResp.ContainsKey("fields") ? jsonResp["fields"] : new List<ApiErrorField>();
+        //}
 
         public ApiErrorException(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
                 return;
 
-            code = info.GetInt32("code");
-            message = info.GetString("message");
-            error = (ApiError)info.GetValue("error", typeof(ApiError));
+            foreach (SerializationEntry entry in info)
+            {
+                switch (entry.Name)
+                {
+                    case "type":
+                        type = info.GetString("type");
+                        break;
+                    case "message":
+                        type = info.GetString("message");
+                        break;
+                    case "fields":
+                        fields = (List<ApiErrorField>)info.GetValue("fields", typeof(List<ApiErrorField>));
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override string ToString()
         {
-            if (info == null)
-                return;
-
-            base.GetObjectData(info, context);
-            info.AddValue("code", code);
-            info.AddValue("message", message);
-            info.AddValue("error", error);
+            return message;
         }
     }
 
@@ -45,23 +57,10 @@ namespace FioSharp.Core.Exceptions
     /// EOSIO Api Error
     /// </summary>
     [Serializable]
-    public class ApiError
+    public class ApiErrorField
     {
-        public int code;
         public string name;
-        public string what;
-        public List<ApiErrorDetail> details;
-    }
-
-    /// <summary>
-    /// EOSIO Api Error detail
-    /// </summary>
-    [Serializable]
-    public class ApiErrorDetail
-    {
-        public string message;
-        public string file;
-        public int line_number;
-        public string method;
+        public string value;
+        public string error;
     }
 }

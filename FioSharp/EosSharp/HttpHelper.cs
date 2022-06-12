@@ -213,16 +213,20 @@ namespace FioSharp
 
             var content = await StreamToStringAsync(stream);
 
-            ApiErrorException apiError = null;
+            ApiErrorException apiError;
             try
             {
                 Console.WriteLine("Response Content:");
                 Console.WriteLine(content);
                 Console.WriteLine();
+                //Dictionary<string, dynamic> jsonResp = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
+                //apiError = new ApiErrorException((int)response.StatusCode, jsonResp);
                 apiError = JsonConvert.DeserializeObject<ApiErrorException>(content);
+                apiError.code = (int)response.StatusCode;
             }
-            catch(Exception)
+            catch(Exception e)
             {
+                Console.WriteLine(e.ToString());
                 throw new ApiException
                 {
                     StatusCode = (int)response.StatusCode,

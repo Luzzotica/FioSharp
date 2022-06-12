@@ -1,5 +1,5 @@
 ﻿using System;
-namespace FioSharp.Util
+namespace FioSharp.Core.Helpers
 {
     public class Accounts
     {

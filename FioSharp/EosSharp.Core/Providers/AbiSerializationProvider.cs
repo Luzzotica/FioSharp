@@ -335,10 +335,7 @@ namespace FioSharp.Core.Providers
         /// <returns></returns>
         public async Task<Abi> GetAbi(string accountName)
         {
-            var result = await Api.GetRawAbi(new GetRawAbiRequest()
-            {
-                account_name = accountName
-            });
+            var result = await Api.GetRawAbi(accountName);
 
             return DeserializePackedAbi(result.abi);
         }

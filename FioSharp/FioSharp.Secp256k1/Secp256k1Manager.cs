@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography;
-using FioSharp.Secp256k1.Models;
 //using Cryptography.ECDSA.Internal.Secp256K1;
 //using NBitcoin.Secp256k1;
 using NBitcoin;

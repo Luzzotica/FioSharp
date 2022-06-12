@@ -36,283 +36,7 @@ namespace FioSharp.Core
             AbiSerializer = new AbiSerializationProvider(Api);
         }
 
-        #region Api Methods
-
-        /// <summary>
-        /// Query for blockchain information
-        /// </summary>
-        /// <returns>Blockchain information</returns>
-        public Task<GetInfoResponse> GetInfo()
-        {
-            return Api.GetInfo();
-        }
-
-        /// <summary>
-        /// Query for account information
-        /// </summary>
-        /// <param name="accountName">account to query information</param>
-        /// <returns>account information</returns>
-        public Task<GetAccountResponse> GetAccount(string accountName)
-        {
-            return Api.GetAccount(new GetAccountRequest()
-            {
-                account_name = accountName
-            });
-        }
-
-        /// <summary>
-        /// Query that gets the actor associated with this public key.
-        /// </summary>
-        /// <param name="publicKey">The public key</param>
-        /// <returns>The actor associated with the public key</returns>
-        public Task<GetActorResponse> GetActor(string publicKey)
-        {
-            return Api.GetActor(new GetActorRequest()
-            {
-                fio_public_key = publicKey
-            });
-        }
-
-        /// <summary>
-        /// Query for smart contract detailed information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <param name="codeAsWasm">query code as wasm, wast otherwise</param>
-        /// <returns>smart contract information</returns>
-        public Task<GetCodeResponse> GetCode(string accountName, bool codeAsWasm)
-        {
-            return Api.GetCode(new GetCodeRequest()
-            {
-                account_name = accountName,
-                code_as_wasm = codeAsWasm
-            });
-        }
-
-        /// <summary>
-        /// Query for smart contract abi detailed information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <returns></returns>
-        public async Task<Abi> GetAbi(string accountName)
-        {
-            return (await Api.GetAbi(new GetAbiRequest()
-            {
-                account_name = accountName
-            })).abi;
-        }
-
-        /// <summary>
-        /// Query for smart contract abi detailed information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <param name="abiHash">TODO</param>
-        /// <returns>smart contract abi information as Base64FcString</returns>
-        public Task<GetRawAbiResponse> GetRawAbi(string accountName, string abiHash = null)
-        {
-            return Api.GetRawAbi(new GetRawAbiRequest()
-            {
-                account_name = accountName,
-                abi_hash = abiHash
-            });
-        }
-
-        /// <summary>
-        /// Query for smart contract raw wasm and abi information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <returns>smart contract wasm and abi information</returns>
-        public Task<GetRawCodeAndAbiResponse> GetRawCodeAndAbi(string accountName)
-        {
-            return Api.GetRawCodeAndAbi(new GetRawCodeAndAbiRequest()
-            {
-                account_name = accountName
-            });
-        }
-
-        /// <summary>
-        /// Transform action data to packed binary format
-        /// </summary>
-        /// <param name="code">smart contract account name</param>
-        /// <param name="action">action name</param>
-        /// <param name="data">action </param>
-        /// <returns></returns>
-        public async Task<string> AbiJsonToBin(string code, string action, object data)
-        {
-            return (await Api.AbiJsonToBin(new AbiJsonToBinRequest()
-            {
-                code = code,
-                action = action,
-                args = data
-            })).binargs;
-        }
-
-        /// <summary>
-        /// Transform action data as packed binary format to object
-        /// </summary>
-        /// <param name="code"></param>
-        /// <param name="action"></param>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public async Task<object> AbiBinToJson(string code, string action, string data)
-        {
-            return (await Api.AbiBinToJson(new AbiBinToJsonRequest()
-            {
-                code = code,
-                action = action,
-                binargs = data
-            })).args;
-        }
-
-        /// <summary>
-        /// Calculate required keys to sign the given transaction
-        /// </summary>
-        /// <param name="availableKeys">available public keys list</param>
-        /// <param name="trx">transaction requiring signatures</param>
-        /// <returns>required public keys</returns>
-        public async Task<List<string>> GetRequiredKeys(List<string> availableKeys, Transaction trx)
-        {
-            int actionIndex = 0;
-            var abiSerializer = new AbiSerializationProvider(Api);
-            var abiResponses = await abiSerializer.GetTransactionAbis(trx);
-
-            foreach (var action in trx.context_free_actions)
-            {
-                action.data = SerializationHelper.ByteArrayToHexString(abiSerializer.SerializeActionData(action, abiResponses[actionIndex++]));
-            }
-
-            foreach (var action in trx.actions)
-            {
-                action.data = SerializationHelper.ByteArrayToHexString(abiSerializer.SerializeActionData(action, abiResponses[actionIndex++]));
-            }
-
-            return (await Api.GetRequiredKeys(new GetRequiredKeysRequest()
-            {
-                available_keys = availableKeys,
-                transaction = trx
-            })).required_keys;
-        }
-
-        /// <summary>
-        /// Query for blockchain block information
-        /// </summary>
-        /// <param name="blockNumOrId">block number or id to query information</param>
-        /// <returns>block information</returns>
-        public Task<GetBlockResponse> GetBlock(string blockNumOrId)
-        {
-            return Api.GetBlock(new GetBlockRequest()
-            {
-                block_num_or_id = blockNumOrId
-            });
-        }
-
-        /// <summary>
-        /// Query block head state information
-        /// </summary>
-        /// <param name="blockNumOrId">block number or id</param>
-        /// <returns>TODO</returns>
-        public Task<GetBlockHeaderStateResponse> GetBlockHeaderState(string blockNumOrId)
-        {
-            return Api.GetBlockHeaderState(new GetBlockHeaderStateRequest()
-            {
-                block_num_or_id = blockNumOrId
-            });
-        }
-
-        /// <summary>
-        /// Query account balance for a given token
-        /// </summary>
-        /// <param name="code">token smart contract account</param>
-        /// <param name="account">account name to check</param>
-        /// <param name="symbol">token symbol (optional)</param>
-        /// <returns>token balances</returns>
-        public async Task<List<string>> GetCurrencyBalance(string code, string account, string symbol)
-        {
-            return (await Api.GetCurrencyBalance(new GetCurrencyBalanceRequest()
-            {
-                code = code,
-                account = account,
-                symbol = symbol
-            })).assets;
-        }
-
-        /// <summary>
-        /// Query token statistics
-        /// </summary>
-        /// <param name="code">token smart contract account</param>
-        /// <param name="symbol">token symbol (optional)</param>
-        /// <returns>currencies statistics</returns>
-        public async Task<Dictionary<string, CurrencyStat>> GetCurrencyStats(string code, string symbol)
-        {
-            return (await Api.GetCurrencyStats(new GetCurrencyStatsRequest()
-            {
-                code = code,
-                symbol = symbol
-            })).stats;
-        }
-
-        /// <summary>
-        /// Query producers information
-        /// </summary>
-        /// <param name="request.json">get list as json</param>
-        /// <param name="request.lower_bound">lower bound for the selected index value</param>
-        /// <param name="request.limit">limit the amount of results. Default 50</param>
-        /// <returns>producers information</returns>
-        public async Task<GetProducersResponse> GetProducers(GetProducersRequest request)
-        {
-            var result = await Api.GetProducers(request);
-
-            if (!request.json)
-            {
-                var unpackedRows = new List<object>();
-
-                foreach (var rowData in result.rows)
-                {
-                    unpackedRows.Add(AbiSerializer.DeserializeType<Producer>((string)rowData));
-                }
-
-                result.rows = unpackedRows;
-            }
-
-            return result;
-        }
-
-        /// <summary>
-        /// Query producers schedule
-        /// </summary>
-        /// <returns>Active, pending and proposed schedule</returns>
-        public Task<GetProducerScheduleResponse> GetProducerSchedule()
-        {
-            return Api.GetProducerSchedule();
-        }
-
-        /// <summary>
-        /// Query scheduled transactions
-        /// </summary>
-        /// <param name="request.json">get list as json</param>
-        /// <param name="request.lower_bound">lower bound for the selected index value</param>
-        /// <param name="request.limit">limit the amount of results. Default 50</param>
-        /// <returns>Scheduled transactions</returns>
-        public async Task<GetScheduledTransactionsResponse> GetScheduledTransactions(GetScheduledTransactionsRequest request)
-        {
-            var result = await Api.GetScheduledTransactions(request);
-
-            if (!request.json)
-            {
-                foreach (var trx in result.transactions)
-                {
-                    try
-                    {
-                        trx.transaction = await AbiSerializer.DeserializePackedTransaction((string)trx.transaction);
-                    }
-                    catch (Exception)
-                    {
-                        //ignore transactions with invalid abi's
-                    }
-                }
-            }
-
-            return result;
-        }
+        #region Transaction Methods
 
         /// <summary>
         /// Creates a signed transaction using the signature provider and broadcasts it to the network
@@ -320,9 +44,9 @@ namespace FioSharp.Core
         /// <param name="trx">Transaction to send</param>
         /// <param name="requiredKeys">Override required keys to sign transaction</param>
         /// <returns>transaction id</returns>
-        public async Task<string> CreateTransaction(Transaction trx, List<string> requiredKeys = null)
+        public async Task<string> CreateTransaction(Transaction trx)
         {
-            var signedTrx = await SignTransaction(trx, requiredKeys);
+            var signedTrx = await SignTransaction(trx);
             return await BroadcastTransaction(signedTrx);
         }
 
@@ -330,9 +54,8 @@ namespace FioSharp.Core
         /// Creates a signed transaction using the signature provider
         /// </summary>
         /// <param name="trx">Transaction to sign</param>
-        /// <param name="requiredKeys">Override required keys to sign transaction</param>
         /// <returns>transaction id</returns>
-        public async Task<SignedTransaction> SignTransaction(Transaction trx, List<string> requiredKeys = null)
+        public async Task<SignedTransaction> SignTransaction(Transaction trx)
         {
             if (trx == null)
                 throw new ArgumentNullException("Transaction");
@@ -357,44 +80,35 @@ namespace FioSharp.Core
                     getInfoResult = await Api.GetInfo();
 
                 var taposBlockNum = getInfoResult.head_block_num - (int)FioConfig.blocksBehind;
+                var getBlockResult = await Api.GetBlock(taposBlockNum.ToString());
+                trx.expiration = getBlockResult.timestamp.AddSeconds(FioConfig.ExpireSeconds);
+                trx.ref_block_num = (UInt16)(getBlockResult.block_num & 0xFFFF);
+                trx.ref_block_prefix = getBlockResult.ref_block_prefix;
+                //if ((taposBlockNum - getInfoResult.last_irreversible_block_num) < 2)
+                //{
 
-                if ((taposBlockNum - getInfoResult.last_irreversible_block_num) < 2)
-                {
-                    var getBlockResult = await Api.GetBlock(new GetBlockRequest()
-                    {
-                        block_num_or_id = taposBlockNum.ToString()
-                    });
-                    trx.expiration = getBlockResult.timestamp.AddSeconds(FioConfig.ExpireSeconds);
-                    trx.ref_block_num = (UInt16)(getBlockResult.block_num & 0xFFFF);
-                    trx.ref_block_prefix = getBlockResult.ref_block_prefix;
-                }
-                else
-                {
-                    var getBlockHeaderState = await Api.GetBlockHeaderState(new GetBlockHeaderStateRequest()
-                    {
-                        block_num_or_id = taposBlockNum.ToString()
-                    });
-                    trx.expiration = getBlockHeaderState.header.timestamp.AddSeconds(FioConfig.ExpireSeconds);
-                    trx.ref_block_num = (UInt16)(getBlockHeaderState.block_num & 0xFFFF);
-                    trx.ref_block_prefix = Convert.ToUInt32(SerializationHelper.ReverseHex(getBlockHeaderState.id.Substring(16, 8)), 16);
-                }
+                //}
+                //else
+                //{
+                //    var getBlockHeaderState = await Api.GetBlockHeaderState(new GetBlockHeaderStateRequest()
+                //    {
+                //        block_num_or_id = taposBlockNum.ToString()
+                //    });
+                //    trx.expiration = getBlockHeaderState.header.timestamp.AddSeconds(FioConfig.ExpireSeconds);
+                //    trx.ref_block_num = (UInt16)(getBlockHeaderState.block_num & 0xFFFF);
+                //    trx.ref_block_prefix = Convert.ToUInt32(SerializationHelper.ReverseHex(getBlockHeaderState.id.Substring(16, 8)), 16);
+                //}
             }
 
+            // Serialize the transaction, get our required keys, and get the abi for the account
             var packedTrx = await AbiSerializer.SerializePackedTransaction(trx);
-            
-            if(requiredKeys == null || requiredKeys.Count == 0)
-            {
-                var availableKeys = await FioConfig.SignProvider.GetAvailableKeys();
-                requiredKeys = await GetRequiredKeys(availableKeys.ToList(), trx);
-            }
-            
+            List<string> requiredKeys = (await FioConfig.SignProvider.GetAvailableKeys()).ToList();
             IEnumerable<string> abis = null;
-
             if (trx.actions != null)
                 abis = trx.actions.Select(a => a.account);
 
+            // Sign the transaction and return it
             var signatures = await FioConfig.SignProvider.Sign(chainId, requiredKeys, packedTrx, abis);
-
             return new SignedTransaction()
             {
                 Signatures = signatures,
@@ -412,76 +126,14 @@ namespace FioSharp.Core
             if (strx == null)
                 throw new ArgumentNullException("SignedTransaction");
 
-            var result = await Api.PushTransaction(new PushTransactionRequest()
-            {
-                signatures = strx.Signatures.ToArray(),
-                compression = 0,
-                packed_context_free_data = "",
-                packed_trx = SerializationHelper.ByteArrayToHexString(strx.PackedTransaction)
-            });
+            PushTransactionResponse result = await Api.PushTransaction(strx.Signatures.ToArray(),
+                SerializationHelper.ByteArrayToHexString(strx.PackedTransaction));
             return result.transaction_id;
-        }
-
-        /// <summary>
-        /// Query for account actions log
-        /// </summary>
-        /// <param name="accountName">account to query information</param>
-        /// <param name="pos">Absolute sequence positon -1 is the end/last action</param>
-        /// <param name="offset">Number of actions relative to pos, negative numbers return [pos-offset,pos), positive numbers return [pos,pos+offset)</param>
-        /// <returns></returns>
-        public Task<GetActionsResponse> GetActions(string accountName, Int32 pos, Int32 offset)
-        {
-            return Api.GetActions(new GetActionsRequest()
-            {
-                account_name = accountName,
-                pos = pos,
-                offset = offset
-            });
-        }
-
-        /// <summary>
-        /// Query transaction information
-        /// </summary>
-        /// <param name="transactionId">transaction id</param>
-        /// <returns>Transaction information</returns>
-        public Task<GetTransactionResponse> GetTransaction(string transactionId, UInt32? blockNumberHint = null)
-        {
-            return Api.GetTransaction(new GetTransactionRequest()
-            {
-                id = transactionId,
-                block_num_hint = blockNumberHint
-            });
-        }
-
-        /// <summary>
-        /// Query public key accounts
-        /// </summary>
-        /// <param name="publicKey">public key</param>
-        /// <returns>account names</returns>
-        public async Task<List<string>> GetKeyAccounts(string publicKey)
-        {
-            return (await Api.GetKeyAccounts(new GetKeyAccountsRequest()
-            {
-                public_key = publicKey
-            })).account_names;
-        }
-
-        /// <summary>
-        /// Query controlled accounts by a given account
-        /// </summary>
-        /// <param name="accountName">account name to search</param>
-        /// <returns>controlled account names</returns>
-        public async Task<List<string>> GetControlledAccounts(string accountName)
-        {
-            return (await Api.GetControlledAccounts(new GetControlledAccountsRequest()
-            {
-                controlling_account = accountName
-            })).controlled_accounts;
         }
 
         #endregion
 
-        #region dh encryption and decryption
+        #region DH Encryption and Decryption
 
         /// <summary>
         /// Takes the private and public keys provided and uses diffie hellman to encrypt
@@ -503,7 +155,7 @@ namespace FioSharp.Core
                 abi
             );
             byte[] secret = Secp256K1Manager.GetSharedKey(privateKey, otherPubKey);
-            byte[] encrypted = FioEncryptionManager.GetInstance().EncryptBytes(secret, message, IV);
+            byte[] encrypted = FioEncryptionManager.EncryptBytes(secret, message, IV);
             return Convert.ToBase64String(encrypted);
         }
 
@@ -520,7 +172,7 @@ namespace FioSharp.Core
         {
             byte[] secret = Secp256K1Manager.GetSharedKey(privateKey, otherPubKey);
             byte[] contentBytes = Convert.FromBase64String(content);
-            byte[] decrypted = FioEncryptionManager.GetInstance().DecryptBytes(secret, contentBytes);
+            byte[] decrypted = FioEncryptionManager.DecryptBytes(secret, contentBytes);
             Abi abi = await AbiSerializer.GetAbi(FioHelper.FIO_REQ_OBT_CONTRACT);
             return AbiSerializer.DeserializeStructData(FioHelper.GetFioAbiStruct(fioContentType), decrypted, abi);
         }
