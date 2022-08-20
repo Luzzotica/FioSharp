@@ -1006,27 +1006,75 @@ namespace FioSharp.Core.Api.v1
  
 		public List<ActionTrace> traces;
     }
+	[Serializable]
+	public class GetSentFioRequestsResponse
+    {
+		public List<FioRequest> requests;
+		public int more;
+	}
+	[Serializable]
+	public class GetReceivedFioRequestsResponse
+	{
+		public List<FioRequest> requests;
+		public int more;
+	}
+	[Serializable]
+	public class GetPendingFioRequestsResponse
+	{
+		public List<FioRequest> requests;
+		public int more;
+	}
+	[Serializable]
+	public class GetCancelledFioRequestsResponse
+	{
+		public List<FioRequest> requests;
+		public int more;
+	}
+	[Serializable]
+	public class GetNftsFioAddressResponse
+	{
+		public List<NFTData> nfts;
+		public int more;
+	}
+	[Serializable]
+	public class GetNftsContractResponse
+	{
+		public List<NFTData> nfts;
+		public int more;
+	}
+	[Serializable]
+	public class GetNftsHashResponse
+	{
+		public List<NFTData> nfts;
+		public int more;
+	}
+	[Serializable]
+	public class GetTableRowsResponse
+	{
+		public List<dynamic> rows;
+		public int more;
+	}
 	//[Serializable]
- //   public class GetKeyAccountsRequest
- //   {
+	//   public class GetKeyAccountsRequest
+	//   {
 	//	public string public_key;
- //   }
+	//   }
 	//[Serializable]
- //   public class GetKeyAccountsResponse
- //   {
+	//   public class GetKeyAccountsResponse
+	//   {
 	//	public List<string> account_names;
- //   }
+	//   }
 	//[Serializable]
- //   public class GetControlledAccountsRequest
- //   {
+	//   public class GetControlledAccountsRequest
+	//   {
 	//	public string controlling_account;
- //   }
+	//   }
 	//[Serializable]
- //   public class GetControlledAccountsResponse
- //   {
+	//   public class GetControlledAccountsResponse
+	//   {
 	//	public List<string> controlled_accounts;
- //   }
-	
+	//   }
+
 	[Serializable]
 	public class GetFioBalanceResponse
 	{

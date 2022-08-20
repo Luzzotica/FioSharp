@@ -12,7 +12,7 @@ using FioSharp.Util;
 
 namespace FioSharp
 {
-    public class FioSdk
+    public class FioSdk : IFioSdk
     {
         public static int SUFUnit = 1000000000;
 
@@ -85,14 +85,18 @@ namespace FioSharp
             return suf / SUFUnit;
         }
 
-        public string PrivateKey { get; private set; }
-        public string PublicKey { get; private set; }
-        public string TechnologyProviderId { get; private set; }
-        public string Actor { get; private set; }
+        string privateKey;
+        string publicKey;
+        string technologyProviderId;
+        string actor;
         byte[] privateKeyBytes;
-        byte[] publicKeyBytes;
 
         public Fio Fio { get; private set; }
+        public FioApi Api { get
+            {
+                return Fio.Api;
+            }
+        }
 
         public Action<bool> setupComplete;
 
@@ -103,9 +107,9 @@ namespace FioSharp
             string technologyProviderId="",
             bool test=false)
         {
-            PrivateKey = privateKey;
-            PublicKey = publicKey;
-            TechnologyProviderId = technologyProviderId;
+            this.privateKey = privateKey;
+            this.publicKey = publicKey;
+            this.technologyProviderId = technologyProviderId;
 
             string url = baseUrl;
             if (url.Equals(""))
@@ -121,18 +125,18 @@ namespace FioSharp
                     privateKey,
                 }),
 
-                HttpEndpoint = baseUrl,
+                HttpEndpoint = url,
                 ChainId = chainId
             };
 
             // Assign our fio config
             Fio = httpHandler == null ? new Fio(fioConfig) : new Fio(fioConfig, httpHandler);
-            _ = Setup();
+            _ = Init();
         }
 
-        private async Task Setup()
+        public async Task Init()
         {
-            Actor = await GetActor(PublicKey);
+            actor = (await Api.GetActor(publicKey)).actor;
             setupComplete?.Invoke(true);
         }
 
@@ -158,8 +162,8 @@ namespace FioSharp
             List<Core.Api.v1.Action> contextFreeActions = null,
             List<Extension> transactionExtensions = null)
         {
-            var getInfoResult = await Fio.Api.GetInfo();
-            var getBlockResult = await Fio.Api.GetBlock(getInfoResult.last_irreversible_block_num.ToString());
+            var getInfoResult = await Api.GetInfo();
+            var getBlockResult = await Api.GetBlock(getInfoResult.last_irreversible_block_num.ToString());
 
             contextFreeActions = contextFreeActions == null ? new List<Core.Api.v1.Action>() : contextFreeActions;
             transactionExtensions = transactionExtensions == null ? new List<Extension>() : transactionExtensions;
@@ -184,160 +188,34 @@ namespace FioSharp
 
         #endregion
 
-        #region Api Endpoints
-
-        public async Task<GetFioBalanceResponse> GetFioBalance(string fioPublicKey)
-        {
-            return await Fio.Api.GetFioBalance(fioPublicKey);
-        }
-
-        public async Task<GetFioNamesResponse> GetFioNames(string fioPublicKey)
-        {
-            return await Fio.Api.GetFioNames(fioPublicKey);
-        }
-
-        public async Task<GetFioAddressesResponse> GetFioAddresses(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetFioAddresses(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetFioDomainsResponse> GetFioDomains(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetFioDomains(fioPublicKey, limit, offset);
-        }
-
-        public async Task<AvailCheckResponse> AvailCheck(string fioName)
-        {
-            return await Fio.Api.AvailCheck(fioName);
-        }
-
-        public async Task<GetPubAddressRequest> GetPublicAddress(string fioAddress, string chainCode, string tokenCode)
-        {
-            return await Fio.Api.GetPublicAddress(fioAddress, chainCode, tokenCode);
-        }
-
-        public async Task<GetPubAddressesResponse> GetPublicAddresses(string fioAddress, int limit, int offset)
-        {
-            return await Fio.Api.GetPublicAddresses(fioAddress, limit, offset);
-        }
-
-        public async Task<GetFioRequestsResponse> GetSentFioRequests(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetSentFioRequests(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetFioRequestsResponse> GetReceivedFioRequests(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetReceivedFioRequests(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetFioRequestsResponse> GetPendingFioRequests(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetPendingFioRequests(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetFioRequestsResponse> GetCancelledFioRequests(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetCancelledFioRequests(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetObtDataResponse> GetObtData(string fioPublicKey, int limit, int offset)
-        {
-            return await Fio.Api.GetObtData(fioPublicKey, limit, offset);
-        }
-
-        public async Task<GetLocksResponse> GetLocks(string fioPublicKey)
-        {
-            return await Fio.Api.GetLocks(fioPublicKey);
-        }
-
-        public async Task<GetFeeResponse> GetFee(string endpoint, string fioAddress)
-        {
-            return await Fio.Api.GetFee(endpoint, fioAddress);
-        }
-
-        public async Task<GetNftsResponse> GetNftsFioAddress(string fioAddress, int limit, int offset)
-        {
-            return await Fio.Api.GetNftsFioAddress(fioAddress, limit, offset);
-        }
-
-        public async Task<GetNftsResponse> GetNftsContract(string contractAddress, string chainCode, string tokenId, int limit, int offset)
-        {
-            return await Fio.Api.GetNftsContract(contractAddress, chainCode, tokenId, limit, offset);
-        }
-
-        public async Task<GetNftsResponse> GetNftsHash(string hash, int limit, int offset)
-        {
-            return await Fio.Api.GetNftsHash(hash, limit, offset);
-        }
-
-        public async Task<string> GetActor(string fioPubKey)
-        {
-            return (await Fio.Api.GetActor(fioPubKey)).actor;
-        }
-
-        public async Task<GetAccountResponse> GetAccount(string accountName)
-        {
-            return await Fio.Api.GetAccount(accountName);
-        }
-
-        /// <summary>
-        /// Query for blockchain information
-        /// </summary>
-        /// <returns>Blockchain information</returns>
-        public async Task<GetInfoResponse> GetInfo()
-        {
-            return await Fio.Api.GetInfo();
-        }
-
-        /// <summary>
-        /// Query for blockchain block information
-        /// </summary>
-        /// <param name="blockNumOrId">block number or id to query information</param>
-        /// <returns>block information</returns>
-        public async Task<GetBlockResponse> GetBlock(string blockNumOrId)
-        {
-            return await Fio.Api.GetBlock(blockNumOrId);
-        }
-
-        /// <summary>
-        /// Query for smart contract abi detailed information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <returns></returns>
-        public async Task<Abi> GetAbi(string accountName, bool reload = false)
-        {
-            return await Fio.Api.GetAbi(accountName, reload);
-        }
-
-        /// <summary>
-        /// Query for smart contract abi detailed information
-        /// </summary>
-        /// <param name="accountName">smart contract account name</param>
-        /// <returns>smart contract abi information as Base64FcString</returns>
-        public async Task<GetRawAbiResponse> GetRawAbi(string accountName, bool reload = false)
-        {
-            return await Fio.Api.GetRawAbi(accountName, reload);
-        }
-
-        public async Task<GetProducersResponse> GetProducers(string limit, string lower_bound)
-        {
-            return await Fio.Api.GetProducers(limit, lower_bound);
-        }
-
-        #endregion
-
         #region Getters and Setters
 
-        public List<PermissionLevel> GetPermissionLevels()
+        public Fio GetFio()
         {
-            return new List<PermissionLevel>()
-            {
-                new PermissionLevel() {actor = "bepto5rwh5gy", permission = "active" }
-            };
+            return Fio;
         }
 
-        public byte[] GetPrivateKeyBytes()
+        public FioApi GetFioApi()
+        {
+            return Fio.Api;
+        }
+
+        public string GetPublicKey()
+        {
+            return publicKey;
+        }
+
+        public string GetTehcnologyProviderId()
+        {
+            return technologyProviderId;
+        }
+
+        public string GetActor()
+        {
+            return actor;
+        }
+
+        private byte[] GetPrivateKeyBytes()
         {
             if (privateKeyBytes != null)
             {
@@ -345,7 +223,7 @@ namespace FioSharp
             }
 
             // Cache the result
-            privateKeyBytes = CryptoHelper.GetPrivateKeyBytesWithoutCheckSum(PrivateKey);
+            privateKeyBytes = CryptoHelper.GetPrivateKeyBytesWithoutCheckSum(privateKey);
             return privateKeyBytes;
         }
 
