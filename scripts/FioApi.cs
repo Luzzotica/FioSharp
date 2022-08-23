@@ -47,13 +47,13 @@ namespace FioSharp.Core.Api.v1
             string packedTrx)
         {
             return await PostJson<PushTransactionResponse>("push_transaction",
-                new Dictionary<string, dynamic>()
-                {
-                    { "signatures", signatures },
-                    { "compression", 0 },
-                    { "packed_context_free_data", "" },
-                    { "packed_trx", packedTrx }
-                });
+              new Dictionary<string, dynamic>()
+              {
+                { "signatures", signatures },
+                { "compression", 0 },
+                { "packed_context_free_data", "" },
+                { "packed_trx", packedTrx }
+              });
         }
         
         public async Task<GetFioBalanceResponse> GetFioBalance(string fioPublicKey) 
@@ -236,7 +236,7 @@ namespace FioSharp.Core.Api.v1
                 { "account_name", accountName }
             }, reload: reload);
         }        
-        public async Task<GetProducersResponse> GetProducers(string limit, string lowerBound, boolean json) 
+        public async Task<GetProducersResponse> GetProducers(string limit, string lowerBound, bool json) 
         {
           return await PostJson<GetProducersResponse>("get_producers",
             new Dictionary<string, dynamic>()
@@ -244,7 +244,7 @@ namespace FioSharp.Core.Api.v1
                 { "limit", limit }, { "lower_bound", lowerBound }, { "json", json }
             });
         }        
-        public async Task<GetTableRowsResponse> GetTableRows(string code, string scope, string table, string lowerBound, string upperBound, string keyType, string indexPosition, int limit, boolean json, boolean reverse) 
+        public async Task<GetTableRowsResponse> GetTableRows(string code, string scope, string table, string lowerBound, string upperBound, string keyType, string indexPosition, int limit, bool json, bool reverse) 
         {
           return await PostJson<GetTableRowsResponse>("get_table_rows",
             new Dictionary<string, dynamic>()

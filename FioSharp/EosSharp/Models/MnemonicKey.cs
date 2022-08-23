@@ -1,7 +1,4 @@
-﻿using System;
-using NBitcoin;
-
-namespace FioSharp.Models
+﻿namespace FioSharp.Models
 {
     public class MnemonicKey
     {

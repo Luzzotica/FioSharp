@@ -5,7 +5,8 @@ cached_endpoints = ['get_abi', 'get_raw_abi']
 ignored_endpoints = ['/fio_api_endpoint', '/push_transaction']
 
 YAML_TYPE_TO_CS = {
-  'integer': 'int'
+  'integer': 'int',
+  'boolean': 'bool'
 }
 def get_cs_type(t):
   if t in YAML_TYPE_TO_CS:
@@ -36,7 +37,10 @@ def get_parameters(post_info):
 
 
 def build_function_params(params):
-  '''Builds the parameters of the function as a string and returns it.'''
+  '''
+  Builds the parameters of the function as a string and returns it.
+  Example: "string fioPubKey, int limit, int offset"
+  '''
   param_list = []
   for p_name, p_info in params.items():
     p_name_camel = to_camel_case(p_name)
@@ -46,6 +50,10 @@ def build_function_params(params):
 
 
 def build_dict_params(params):
+  '''
+  Builds the parameters into a dictionary structure as a string.
+  Example: '{ "fio_pub_key", fioPubKey }, { "limit", limit }, { "offset", offset }'
+  '''
   param_list = []
   for p_name, p_info in params.items():
     p_name_camel = to_camel_case(p_name)

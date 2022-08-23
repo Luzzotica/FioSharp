@@ -161,7 +161,7 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await api.GetPublicAddress(fioAddress1, "FIO", "FIO");
+                await api.GetPubAddress(fioAddress1, "FIO", "FIO");
                 success = true;
             }
             catch (ApiErrorException ex)
@@ -182,7 +182,7 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await api.GetPublicAddresses(fioAddress1, 10, 0);
+                await api.GetPubAddresses(fioAddress1, 10, 0);
                 success = true;
             }
             catch (ApiErrorException ex)
@@ -498,7 +498,7 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                Abi resp = await api.GetAbi("fio.reqobt");
+                Abi resp = (await api.GetAbi("fio.reqobt")).abi;
                 foreach (AbiStruct s in resp.structs)
                 {
                     Console.WriteLine();
@@ -551,7 +551,7 @@ namespace FioSharp.UnitTests
             bool success = false;
             try
             {
-                await api.GetProducers("10", "0");
+                await api.GetProducers("10", "0", true);
                 success = true;
             }
             catch (ApiErrorException ex)

@@ -27,7 +27,7 @@ namespace FioSharp
             byte[] privateKey = Secp256K1Manager.CreatePrivateKeyMnemonic(mnemonic);
             return new MnemonicKey()
             {
-                fioPrivateKey = CryptoHelper.PrivKeyBytesToString(privateKey),
+                fioPrivateKey = CryptoHelper.KeyToString(privateKey, "sha256x2"),
                 mnemonic = mnemonic
             };
         }
@@ -68,7 +68,7 @@ namespace FioSharp
             return Validation.Validate(publicAddress, RegexExpressions.NATIVE_BLOCKCHAIN_ADDRESS);
         }
 
-        public static double amountToSUF(double amount)
+        public static long AmountToSUF(double amount)
         {
             double floor = Math.Floor(amount);
             double tempResult = floor * SUFUnit;
@@ -77,7 +77,7 @@ namespace FioSharp
             double remainderResult = remainder * SUFUnit;
             double floorRemainder = Math.Floor(remainderResult);
 
-            return tempResult + floorRemainder;
+            return (long)(tempResult + floorRemainder);
         }
 
         public static double SUFToAmount(double suf)
@@ -101,7 +101,7 @@ namespace FioSharp
         public Action<bool> setupComplete;
 
         public FioSdk(string privateKey,
-            string publicKey,
+            string publicKey="",
             string baseUrl="",
             IHttpHandler httpHandler=null,
             string technologyProviderId="",
@@ -131,7 +131,6 @@ namespace FioSharp
 
             // Assign our fio config
             Fio = httpHandler == null ? new Fio(fioConfig) : new Fio(fioConfig, httpHandler);
-            _ = Init();
         }
 
         public async Task Init()
@@ -157,6 +156,15 @@ namespace FioSharp
         #endregion
 
         #region Transaction Handling
+
+        public async Task<string> PushTransaction(Core.Api.v1.Action action,
+            List<Core.Api.v1.Action> contextFreeActions = null,
+            List<Extension> transactionExtensions = null)
+        {
+            return await PushTransaction(new List<Core.Api.v1.Action> { action },
+                contextFreeActions: contextFreeActions,
+                transactionExtensions: transactionExtensions);
+        }
 
         public async Task<string> PushTransaction(List<Core.Api.v1.Action> actions,
             List<Core.Api.v1.Action> contextFreeActions = null,
@@ -184,6 +192,110 @@ namespace FioSharp
             };
 
             return await Fio.CreateTransaction(trx);
+        }
+
+        #endregion
+
+        #region API
+
+        public async Task<GetFioBalanceResponse> GetFioBalance(string fioPublicKey=null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetFioBalance(key);
+        }
+        public async Task<GetFioNamesResponse> GetFioNames(string fioPublicKey=null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetFioNames(key);
+        }
+        public async Task<GetFioAddressesResponse> GetFioAddresses(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetFioAddresses(key, limit, offset);
+        }
+        public async Task<GetFioDomainsResponse> GetFioDomains(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetFioDomains(key, limit, offset);
+        }
+        public async Task<GetSentFioRequestsResponse> GetSentFioRequests(string fioPublicKey=null, int limit, int offset)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetSentFioRequests(key, limit, offset);
+        }
+        public async Task<GetReceivedFioRequestsResponse> GetReceivedFioRequests(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetReceivedFioRequests(key, limit, offset);
+        }
+        public async Task<GetPendingFioRequestsResponse> GetPendingFioRequests(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetPendingFioRequests(key, limit, offset);
+        }
+        public async Task<GetCancelledFioRequestsResponse> GetCancelledFioRequests(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetCancelledFioRequests(key, limit, offset);
+        }
+        public async Task<GetObtDataResponse> GetObtData(int limit, int offset, string fioPublicKey = null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetObtData(key, limit, offset);
+        }
+        public async Task<GetLocksResponse> GetLocks(string fioPublicKey=null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetLocks(key);
+        }
+        public async Task<GetActorResponse> GetActor(string fioPublicKey=null)
+        {
+            string key = fioPublicKey;
+            if (key == null)
+            {
+                key = GetPublicKey();
+            }
+            return await GetFioApi().GetActor(key);
         }
 
         #endregion
