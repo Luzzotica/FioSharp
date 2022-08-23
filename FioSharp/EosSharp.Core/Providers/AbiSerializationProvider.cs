@@ -1280,6 +1280,9 @@ namespace FioSharp.Core.Providers
                 {
                     return null;
                 }
+
+                uwtype = uwtype.Substring(0, uwtype.Length - 1);
+                //Console.WriteLine(uwtype);
             }
 
             // array type
@@ -1297,7 +1300,7 @@ namespace FioSharp.Core.Providers
                 return items;
             }
 
-            var reader = GetTypeSerializerAndCache(type, TypeReaders, abi);
+            var reader = GetTypeSerializerAndCache(uwtype, TypeReaders, abi);
             if (reader != null)
             {
                 return reader(data, ref readIndex);

@@ -27,13 +27,10 @@ namespace FioSharp.UnitTests
         const string devnetUrl = "http://52.40.41.71:8889";
         const string faucetPrivKey = "5KF2B21xT5pE5G3LNA6LKJc6AP2pAd2EnfpAUrJH12SFV8NtvCD";
 
-        const int defaultWait = 500;
+        const int defaultWait = 1000;
 
-        long defaultFee = FioSdk.AmountToSUF(1000);
-        long defaultFundAmount = FioSdk.AmountToSUF(1000);
-
-
-        string testDomain;
+        readonly ulong defaultFee = FioSdk.AmountToSUF(1000);
+        readonly ulong defaultFundAmount = FioSdk.AmountToSUF(1000);
 
         private string GetDateTimeNowMillis()
         {
@@ -290,12 +287,13 @@ namespace FioSharp.UnitTests
         ///     {{/get_cancelled_fio_requests}}
         /// * Confirm status with {{/get_obt_data}}
         /// * Confirm encrypted content field is properly decrypted by both user keys
-        /// * Respond to request and include {{recordobt}} with the {{fio_request_id}}
-        /// * Confirm { {/ get_sent_fio_requests}}
+        /// * Fulfill the request
+        /// * Create {{recordobt}} with the {{fio_request_id}}
+        /// * Confirm status with {{/get_obt_data}}
+        /// * Confirm {{/ get_sent_fio_requests}}
         ///     {{/get_received_fio_requests}}
         ///     {{/get_pending_fio_requests}}
         ///     {{/get_cancelled_fio_requests}}
-        /// * Confirm status with {{/get_obt_data}}
         /// * Create new request
         /// * Cancel request
         /// * Confirm {{/get_sent_fio_requests}}
@@ -312,20 +310,23 @@ namespace FioSharp.UnitTests
             string fioAddress2 = GenerateTestingFioAddress();
             await RegisterFioHandleToSdk(fioAddress2, fioSdk2);
 
+            Dictionary<string, object> newFundsContent = new newfundsreq_content(
+                fioSdk1.GetPublicKey(),
+                "1",
+                "FIO",
+                "FIO",
+                memo: "Swag").ToJsonObject();
+
+            FioRequest req = null;
+
             // Request fio
             try
             {
-                Dictionary<string, object> content = new newfundsreq_content(
-                    fioSdk1.GetPublicKey(),
-                    "1",
-                    "FIO",
-                    "FIO",
-                    "Swag",
-                    null, null).ToJsonObject();
+                
                 string encryptedContent = await fioSdk1.DHEncrypt(
                     fioSdk2.GetPublicKey(),
                     FioHelper.NEW_FUNDS_CONTENT,
-                    content);
+                    newFundsContent);
 
                 await fioSdk1.PushTransaction(new newfundsreq(
                     fioAddress2,
@@ -335,15 +336,281 @@ namespace FioSharp.UnitTests
                     defaultFee,
                     fioSdk1.GetActor()));
 
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
                 // Confirm request was sent, received, and nothing was cancelled
                 GetSentFioRequestsResponse getSentFioRequests = await fioSdk1.GetSentFioRequests(1, 0);
                 Assert.Greater(getSentFioRequests.requests.Count, 0);
                 GetReceivedFioRequestsResponse getReceivedFioRequests = await fioSdk2.GetReceivedFioRequests(1, 0);
                 Assert.Greater(getReceivedFioRequests.requests.Count, 0);
+                GetPendingFioRequestsResponse getPendingFioRequests = await fioSdk2.GetPendingFioRequests(1, 0);
+                Assert.Greater(getPendingFioRequests.requests.Count, 0);
+
+                req = getReceivedFioRequests.requests[0];
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.Fail(e.ToString() + "\n" + e.StackTrace);
+            }
+
+            try
+            {
                 GetPendingFioRequestsResponse getPendingFioRequests = await fioSdk1.GetPendingFioRequests(1, 0);
-                Assert.AreEqual(getPendingFioRequests.requests.Count, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+
+            try
+            {
                 GetCancelledFioRequestsResponse getCancelledFioRequests = await fioSdk1.GetCancelledFioRequests(1, 0);
-                Assert.AreEqual(getCancelledFioRequests.requests.Count, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+
+            // Fulfill request, record OBT data
+            try
+            {
+                // Confirm encrypted content field is properly decrypted by both user keys
+                Dictionary<string, object> dContent = await fioSdk1.DHDecrypt(
+                    fioSdk2.GetPublicKey(), FioHelper.NEW_FUNDS_CONTENT, req.content);
+                Dictionary<string, object> dContent2 = await fioSdk2.DHDecrypt(
+                    fioSdk1.GetPublicKey(), FioHelper.NEW_FUNDS_CONTENT, req.content);
+                Assert.AreEqual(newFundsContent["memo"], dContent["memo"]);
+                Assert.AreEqual(newFundsContent["memo"], dContent2["memo"]);
+                Assert.AreEqual(dContent, dContent2);
+
+                // 1. Fulfill the request (Transfer funds)
+                // 2. Record OBT data with fio request id
+                PushTransactionResponse txn = await fioSdk2.PushTransaction(new trnsfiopubky(
+                    dContent2["payee_public_address"].ToString(),
+                    ulong.Parse(dContent2["amount"].ToString()),
+                    defaultFee,
+                    "",
+                    fioSdk2.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait); 
+
+                Dictionary<string, object> recordObtContent = new recordobt_content(
+                    fioSdk2.GetPublicKey(),
+                    dContent2["payee_public_address"].ToString(),
+                    dContent2["amount"].ToString(),
+                    dContent2["chain_code"].ToString(),
+                    dContent2["token_code"].ToString(),
+                    "sent_to_blockchain",
+                    txn.transaction_id,
+                    "Transferred").ToJsonObject();
+                string encryptedContent2 = await fioSdk1.DHEncrypt(
+                    fioSdk2.GetPublicKey(),
+                    FioHelper.RECORD_OBT_DATA_CONTENT,
+                    recordObtContent);
+                await fioSdk2.PushTransaction(new recordobt(
+                    req.payer_fio_address,
+                    req.payee_fio_address,
+                    encryptedContent2,
+                    req.fio_request_id.ToString(),
+                    defaultFee,
+                    "",
+                    fioSdk2.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
+                // Confirm obt data
+                GetObtDataResponse getObtData = await fioSdk2.GetObtData(1, 0);
+                ObtData obtData = getObtData.obt_data_records[0];
+                Assert.AreEqual(obtData.fio_request_id, req.fio_request_id);
+                Assert.AreEqual(obtData.status, "sent_to_blockchain");
+                // Confirm encrypted content field is properly decrypted by both user keys
+                Dictionary<string, object> obtDContent = await fioSdk1.DHDecrypt(
+                    fioSdk2.GetPublicKey(), FioHelper.RECORD_OBT_DATA_CONTENT, obtData.content);
+                Dictionary<string, object> obtDContent2 = await fioSdk2.DHDecrypt(
+                    fioSdk1.GetPublicKey(), FioHelper.RECORD_OBT_DATA_CONTENT, obtData.content);
+                Assert.AreEqual(recordObtContent["memo"], obtDContent["memo"]);
+                Assert.AreEqual(recordObtContent["memo"], obtDContent2["memo"]);
+                Assert.AreEqual(obtDContent, obtDContent2);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.Fail(e.ToString() + "\n" + e.StackTrace);
+            }
+
+            try
+            {
+                GetSentFioRequestsResponse getSentFioRequests = await fioSdk1.GetSentFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+            try
+            {
+                GetReceivedFioRequestsResponse getReceivedFioRequests = await fioSdk2.GetReceivedFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+            try
+            {
+                GetPendingFioRequestsResponse getPendingFioRequests = await fioSdk2.GetPendingFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+            try
+            {
+                GetCancelledFioRequestsResponse getCancelledFioRequests = await fioSdk1.GetCancelledFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+
+            // Request and cancel
+            try
+            {
+                string encryptedContent = await fioSdk1.DHEncrypt(
+                    fioSdk2.GetPublicKey(),
+                    FioHelper.NEW_FUNDS_CONTENT,
+                    newFundsContent);
+
+                await fioSdk1.PushTransaction(new newfundsreq(
+                    fioAddress2,
+                    fioAddress,
+                    "",
+                    encryptedContent,
+                    defaultFee,
+                    fioSdk1.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
+                // Confirm request was sent, received, and nothing was cancelled
+                GetSentFioRequestsResponse getSentFioRequests = await fioSdk1.GetSentFioRequests(2, 1);
+                Assert.Greater(getSentFioRequests.requests.Count, 0);
+                req = getSentFioRequests.requests[0];
+                GetPendingFioRequestsResponse getPendingFioRequests = await fioSdk2.GetPendingFioRequests(1, 0);
+                Assert.Greater(getPendingFioRequests.requests.Count, 0);
+
+                await fioSdk1.PushTransaction(new cancelfndreq(
+                    req.fio_request_id.ToString(),
+                    defaultFee,
+                    "",
+                    fioSdk1.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
+                GetCancelledFioRequestsResponse getCancelledFioRequests = await fioSdk1.GetCancelledFioRequests(1, 0);
+                Assert.Greater(getCancelledFioRequests.requests.Count, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.Fail(e.ToString() + "\n" + e.StackTrace);
+            }
+
+            try
+            {
+                GetSentFioRequestsResponse get = await fioSdk1.GetSentFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+            try
+            {
+                GetPendingFioRequestsResponse getPendingFioRequests = await fioSdk2.GetPendingFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+            try
+            {
+                GetReceivedFioRequestsResponse getReceivedFioRequests = await fioSdk2.GetReceivedFioRequests(1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No FIO Requests");
+            }
+        }
+
+        /// <summary>
+        /// * Create two users and register crypto handles for the users
+        /// * Send FIO from user1 to user2 with {{trnsfiopubky}}
+        /// * Add transaction metadata with {{recordobt}}
+        /// * Confirm status with {{/get_obt_data}}
+        /// * Confirm encrypted content field is properly decrypted by both user keys  
+        /// </summary>
+        [Test]
+        public async Task OBTData()
+        {
+            // Register and map an address, confirm it exists
+            string fioAddress = GenerateTestingFioAddress();
+            await RegisterFioHandleToSdk(fioAddress, fioSdk1);
+            string fioAddress2 = GenerateTestingFioAddress();
+            await RegisterFioHandleToSdk(fioAddress2, fioSdk2);
+
+            // Send fio, record OBT, decrypt
+            try
+            {
+                // Get public key from mapped address
+                GetPubAddressResponse getFioAddresses = await fioSdk2.GetFioApi().GetPubAddress(fioAddress, "FIO", "FIO");
+                
+                PushTransactionResponse txn = await fioSdk2.PushTransaction(new trnsfiopubky(
+                    getFioAddresses.public_address,
+                    FioSdk.AmountToSUF(10),
+                    defaultFee,
+                    "",
+                    fioSdk2.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
+                Dictionary<string, object> recordObtContent = new recordobt_content(
+                    getFioAddresses.public_address,
+                    fioSdk1.GetPublicKey(),
+                    FioSdk.AmountToSUF(10).ToString(),
+                    "FIO",
+                    "FIO",
+                    "sent_to_blockchain",
+                    txn.transaction_id,
+                    "Transferred").ToJsonObject();
+                string encryptedContent2 = await fioSdk2.DHEncrypt(
+                    getFioAddresses.public_address,
+                    FioHelper.RECORD_OBT_DATA_CONTENT,
+                    recordObtContent);
+                await fioSdk2.PushTransaction(new recordobt(
+                    fioAddress2,
+                    fioAddress,
+                    encryptedContent2,
+                    "",
+                    defaultFee,
+                    "",
+                    fioSdk2.GetActor()));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+
+                // Confirm obt data
+                GetObtDataResponse getObtData = await fioSdk2.GetObtData(1, 0);
+                ObtData obtData = getObtData.obt_data_records[0];
+                Assert.AreEqual(obtData.status, "sent_to_blockchain");
+                // Confirm encrypted content field is properly decrypted by both user keys
+                Dictionary<string, object> obtDContent = await fioSdk1.DHDecrypt(
+                    fioSdk2.GetPublicKey(), FioHelper.RECORD_OBT_DATA_CONTENT, obtData.content);
+                Dictionary<string, object> obtDContent2 = await fioSdk2.DHDecrypt(
+                    fioSdk1.GetPublicKey(), FioHelper.RECORD_OBT_DATA_CONTENT, obtData.content);
+                Assert.AreEqual(recordObtContent["memo"], obtDContent["memo"]);
+                Assert.AreEqual(recordObtContent["memo"], obtDContent2["memo"]);
+                Assert.AreEqual(obtDContent, obtDContent2);
             }
             catch (ApiErrorException e)
             {
@@ -351,23 +618,188 @@ namespace FioSharp.UnitTests
             }
         }
 
-        //[Test]
-        //public async Task OBTData()
-        //{
+        /// <summary>
+        /// * Create fio handle
+        /// * Create signature with {{addnft}}
+        /// * Confirm with {{/get_nfts_fio_address}}
+        ///     {{/get_nfts_contract}}
+        ///     {{/get_nfts_hash}}
+        /// * Remove signature with {{remnft}}
+        /// * Confirm with {{/get_nfts_fio_address}}
+        ///     {{/get_nfts_contract}}
+        ///     {{/get_nfts_hash}}
+        /// </summary>
+        [Test]
+        public async Task SignedNFTs()
+        {
+            // Register and map an address, confirm it exists
+            string fioAddress = GenerateTestingFioAddress();
+            await RegisterFioHandleToSdk(fioAddress, fioSdk1);
+            string hash = GenerateHashForNft();
+            string chainCode = "A",
+                contractAddress = "B",
+                tokenId = "1",
+                url = "https://service.invalid.com";
 
-        //}
+            try
+            {
+                await fioSdk1.PushTransaction(new addnft(fioAddress,
+                    new List<object> { new NFTData {
+                        chain_code = chainCode,
+                        contract_address = contractAddress,
+                        token_id = tokenId,
+                        url = url,
+                        hash = hash,
+                        metadata = ""
+                    } },
+                    defaultFee,
+                    fioSdk1.GetActor(),
+                    ""));
 
-        //[Test]
-        //public async Task SignedNFTs()
-        //{
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
 
-        //}
+                GetNftsFioAddressResponse getNftsFioAddress = await fioSdk1.GetFioApi().GetNftsFioAddress(fioAddress, 1, 0);
+                Assert.AreEqual(getNftsFioAddress.nfts[0].chain_code, chainCode);
+                Assert.AreEqual(getNftsFioAddress.nfts[0].contract_address, contractAddress);
+                Assert.AreEqual(getNftsFioAddress.nfts[0].token_id, tokenId);
+                Assert.AreEqual(getNftsFioAddress.nfts[0].hash, hash);
+                GetNftsContractResponse getNftsContract = await fioSdk1.GetFioApi().GetNftsContract(chainCode, contractAddress, tokenId, 1, 0);
+                Assert.AreEqual(getNftsContract.nfts[0].chain_code, chainCode);
+                Assert.AreEqual(getNftsContract.nfts[0].contract_address, contractAddress);
+                Assert.AreEqual(getNftsContract.nfts[0].token_id, tokenId);
+                Assert.AreEqual(getNftsContract.nfts[0].hash, hash);
+                GetNftsHashResponse getNftsHash = await fioSdk1.GetFioApi().GetNftsHash(hash, 1, 0);
+                Assert.AreEqual(getNftsHash.nfts[0].chain_code, chainCode);
+                Assert.AreEqual(getNftsHash.nfts[0].contract_address, contractAddress);
+                Assert.AreEqual(getNftsHash.nfts[0].token_id, tokenId);
+                Assert.AreEqual(getNftsHash.nfts[0].hash, hash);
 
+                // Delete the NFT
+                await fioSdk1.PushTransaction(new remnft(fioAddress,
+                    new List<object> { new NFTData {
+                        chain_code = chainCode,
+                        contract_address = contractAddress,
+                        token_id = tokenId,
+                        url = url,
+                        hash = hash,
+                        metadata = ""
+                    } },
+                    defaultFee,
+                    fioSdk1.GetActor(),
+                    ""));
+
+                // Wait for block to confirm
+                await Task.Delay(defaultWait);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.Fail(e.ToString() + "\n" + e.StackTrace);
+            }
+
+            try
+            {
+                GetNftsFioAddressResponse getNftsFioAddress = await fioSdk1.GetFioApi().GetNftsFioAddress(fioAddress, 1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No NFTS are mapped");
+            }
+            try
+            {
+                GetNftsContractResponse getNftsContract = await fioSdk1.GetFioApi().GetNftsContract(chainCode, contractAddress, tokenId, 1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No NFTS are mapped");
+            }
+            try
+            {
+                GetNftsHashResponse getNftsHash = await fioSdk1.GetFioApi().GetNftsHash(hash, 1, 0);
+            }
+            catch (ApiErrorException e)
+            {
+                Assert.AreEqual(e.message, "No NFTS are mapped");
+            }
+        }
+
+        /// <summary>
+        /// * Register fio handle
+        /// * Register as a BP
+        /// * Vote on a BP
+        /// * Stake FIO tokens with {{stakefio}}
+        /// * Confirm with {{get_fio_balance}}
+        /// * Unstake portion of staked FIO with {{unstakefio}}
+        /// * Confirm with {{get_fio_balance}}
+        /// </summary>
         //[Test]
         //public async Task Staking()
         //{
+        //    string fioAddress = GenerateTestingFioAddress();
+        //    await RegisterFioHandleToSdk(fioAddress, fioSdk1);
 
-        //
+        //    try
+        //    {
+        //        await fioSdk1.PushTransaction(new regproducer(fioAddress,
+        //            fioSdk1.GetPublicKey(),
+        //            "",
+        //            80,
+        //            fioSdk1.GetActor(),
+        //            defaultFee));
+
+        //        // Wait for block to confirm
+        //        await Task.Delay(defaultWait);
+
+        //        GetProducersResponse getProducers = await fioSdk1.GetFioApi().GetProducers("50", "...........1f", true);
+        //        Console.WriteLine(getProducers.total_producer_vote_weight);
+        //        Console.WriteLine(getProducers.producers.Count);
+        //        Console.WriteLine(getProducers.more);
+
+        //        //GetFioBalanceResponse getFioBalance = await fioSdk1.GetFioBalance();
+        //        //Assert.AreEqual(0, getFioBalance.staked);
+
+
+        //        //Console.WriteLine(getProducers.rows[0].ToString());
+        //        //string bpHandle = bp.fio_address;
+
+        //        //await fioSdk1.PushTransaction(new stakefio(FioSdk.AmountToSUF(100),
+        //        //    fioAddress,
+        //        //    defaultFee,
+        //        //    "",
+        //        //    fioSdk1.GetActor()));
+
+        //        //// Wait for block to confirm
+        //        //await Task.Delay(defaultWait);
+
+        //        //await fioSdk1.PushTransaction(new stakefio(FioSdk.AmountToSUF(100),
+        //        //    fioAddress,
+        //        //    defaultFee,
+        //        //    "",
+        //        //    fioSdk1.GetActor()));
+
+        //        //// Wait for block to confirm
+        //        //await Task.Delay(defaultWait);
+
+        //        //GetFioBalanceResponse getFioBalance = await fioSdk1.GetFioBalance();
+        //        //Assert.AreEqual(FioSdk.AmountToSUF(100), getFioBalance.staked);
+
+        //        //await fioSdk1.PushTransaction(new unstakefio(FioSdk.AmountToSUF(100),
+        //        //    fioAddress,
+        //        //    defaultFee,
+        //        //    "",
+        //        //    fioSdk1.GetActor()));
+
+        //        //// Wait for block to confirm
+        //        //await Task.Delay(defaultWait);
+
+        //        //getFioBalance = await fioSdk1.GetFioBalance();
+        //        //Assert.Less(FioSdk.AmountToSUF(100), getFioBalance.staked);
+        //    }
+        //    catch (ApiErrorException e)
+        //    {
+        //        Assert.Fail(e.ToString() + "\n" + e.StackTrace);
+        //    }
+        //}
 
         public async Task RegisterFioHandleToSdk(string handle, FioSdk sdk, bool fund = true)
         {

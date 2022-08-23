@@ -26,7 +26,7 @@ namespace FioSharp.Core.Api.v1
         string hash;
         string offlineUrl;
 
-        newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo, string hash, string offlineUrl)
+        public newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo = null, string hash = null, string offlineUrl = null)
         {
             this.payeePublicAddress = payeePublicAddress;
             this.amount = amount;
@@ -40,7 +40,42 @@ namespace FioSharp.Core.Api.v1
         public Dictionary<string, object> ToJsonObject()
         {
             return new Dictionary<string, object>() {
-                { "payee_public_key", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl },
+                { "payee_public_address", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl }
+            };
+        }
+    }
+
+    public class recordobt_content : ITransactionContent
+    {
+        string payerPublicAddress;
+        string payeePublicAddress;
+        string amount;
+        string chainCode;
+        string tokenCode;
+        string status;
+        string obtId;
+        string memo;
+        string hash;
+        string offlineUrl;
+
+        public recordobt_content(string payerPublicAddress, string payeePublicAddress, string amount, string chainCode, string tokenCode, string status, string obtId, string memo = null, string hash = null, string offlineUrl = null)
+        {
+            this.payerPublicAddress = payerPublicAddress;
+            this.payeePublicAddress = payeePublicAddress;
+            this.amount = amount;
+            this.chainCode = chainCode;
+            this.tokenCode = tokenCode;
+            this.status = status;
+            this.obtId = obtId;
+            this.memo = memo;
+            this.hash = hash;
+            this.offlineUrl = offlineUrl;
+        }
+
+        public Dictionary<string, object> ToJsonObject()
+        {
+            return new Dictionary<string, object>() {
+                { "payer_public_address", payerPublicAddress }, { "payee_public_address", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "status", status }, { "obt_id", obtId}, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl }
             };
         }
     }
@@ -50,12 +85,12 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.token";
         string name = "trnsfiopubky";
         public string payeePublicKey;
-        public long amount;
-        public long maxFee;
+        public ulong amount;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public trnsfiopubky(string payeePublicKey, long amount, long maxFee, string tpid, string actor)
+        public trnsfiopubky(string payeePublicKey, ulong amount, ulong maxFee, string tpid, string actor)
         {
             this.payeePublicKey = payeePublicKey;
             this.amount = amount;
@@ -87,14 +122,14 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.token";
         string name = "trnsloctoks";
         public string payeePublicKey;
-        public long canVote;
+        public ulong canVote;
         public List<object> periods;
-        public long amount;
-        public long maxFee;
+        public ulong amount;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public trnsloctoks(string payeePublicKey, long canVote, List<object> periods, long amount, long maxFee, string tpid, string actor)
+        public trnsloctoks(string payeePublicKey, ulong canVote, List<object> periods, ulong amount, ulong maxFee, string tpid, string actor)
         {
             this.payeePublicKey = payeePublicKey;
             this.canVote = canVote;
@@ -129,11 +164,11 @@ namespace FioSharp.Core.Api.v1
         string name = "addaddress";
         public string fioAddress;
         public List<object> publicAddresses;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public addaddress(string fioAddress, List<object> publicAddresses, long maxFee, string tpid, string actor)
+        public addaddress(string fioAddress, List<object> publicAddresses, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.publicAddresses = publicAddresses;
@@ -166,11 +201,11 @@ namespace FioSharp.Core.Api.v1
         string name = "remaddress";
         public string fioAddress;
         public List<object> publicAddresses;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public remaddress(string fioAddress, List<object> publicAddresses, long maxFee, string tpid, string actor)
+        public remaddress(string fioAddress, List<object> publicAddresses, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.publicAddresses = publicAddresses;
@@ -202,11 +237,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "remalladdr";
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public remalladdr(string fioAddress, long maxFee, string tpid, string actor)
+        public remalladdr(string fioAddress, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
@@ -240,10 +275,10 @@ namespace FioSharp.Core.Api.v1
         public string payeeFioAddress;
         public string tpid;
         public object content;
-        public long maxFee;
+        public ulong maxFee;
         public string actor;
 
-        public newfundsreq(string payerFioAddress, string payeeFioAddress, string tpid, object content, long maxFee, string actor)
+        public newfundsreq(string payerFioAddress, string payeeFioAddress, string tpid, object content, ulong maxFee, string actor)
         {
             this.payerFioAddress = payerFioAddress;
             this.payeeFioAddress = payeeFioAddress;
@@ -276,11 +311,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.reqobt";
         string name = "cancelfndreq";
         public string fioRequestId;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public cancelfndreq(string fioRequestId, long maxFee, string tpid, string actor)
+        public cancelfndreq(string fioRequestId, ulong maxFee, string tpid, string actor)
         {
             this.fioRequestId = fioRequestId;
             this.maxFee = maxFee;
@@ -311,11 +346,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.reqobt";
         string name = "rejectfndreq";
         public string fioRequestId;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public rejectfndreq(string fioRequestId, long maxFee, string tpid, string actor)
+        public rejectfndreq(string fioRequestId, ulong maxFee, string tpid, string actor)
         {
             this.fioRequestId = fioRequestId;
             this.maxFee = maxFee;
@@ -349,11 +384,11 @@ namespace FioSharp.Core.Api.v1
         public string payeeFioAddress;
         public object content;
         public string fioRequestId;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public recordobt(string payerFioAddress, string payeeFioAddress, object content, string fioRequestId, long maxFee, string tpid, string actor)
+        public recordobt(string payerFioAddress, string payeeFioAddress, object content, string fioRequestId, ulong maxFee, string tpid, string actor)
         {
             this.payerFioAddress = payerFioAddress;
             this.payeeFioAddress = payeeFioAddress;
@@ -388,11 +423,11 @@ namespace FioSharp.Core.Api.v1
         string name = "regaddress";
         public string fioAddress;
         public string ownerFioPublicKey;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public regaddress(string fioAddress, string ownerFioPublicKey, long maxFee, string tpid, string actor)
+        public regaddress(string fioAddress, string ownerFioPublicKey, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.ownerFioPublicKey = ownerFioPublicKey;
@@ -424,11 +459,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "renewaddress";
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public renewaddress(string fioAddress, long maxFee, string tpid, string actor)
+        public renewaddress(string fioAddress, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
@@ -459,12 +494,12 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "addbundles";
         public string fioAddress;
-        public long bundleSets;
-        public long maxFee;
+        public ulong bundleSets;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public addbundles(string fioAddress, long bundleSets, long maxFee, string tpid, string actor)
+        public addbundles(string fioAddress, ulong bundleSets, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.bundleSets = bundleSets;
@@ -497,11 +532,11 @@ namespace FioSharp.Core.Api.v1
         string name = "xferaddress";
         public string fioAddress;
         public string newOwnerFioPublicKey;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public xferaddress(string fioAddress, string newOwnerFioPublicKey, long maxFee, string tpid, string actor)
+        public xferaddress(string fioAddress, string newOwnerFioPublicKey, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.newOwnerFioPublicKey = newOwnerFioPublicKey;
@@ -533,11 +568,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "burnaddress";
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public burnaddress(string fioAddress, long maxFee, string tpid, string actor)
+        public burnaddress(string fioAddress, ulong maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
@@ -569,11 +604,11 @@ namespace FioSharp.Core.Api.v1
         string name = "regdomain";
         public string fioDomain;
         public string ownerFioPublicKey;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public regdomain(string fioDomain, string ownerFioPublicKey, long maxFee, string tpid, string actor)
+        public regdomain(string fioDomain, string ownerFioPublicKey, ulong maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.ownerFioPublicKey = ownerFioPublicKey;
@@ -605,11 +640,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "renewdomain";
         public string fioDomain;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public renewdomain(string fioDomain, long maxFee, string tpid, string actor)
+        public renewdomain(string fioDomain, ulong maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.maxFee = maxFee;
@@ -640,12 +675,12 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "setdomainpub";
         public string fioDomain;
-        public long isPublic;
-        public long maxFee;
+        public ulong isPublic;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public setdomainpub(string fioDomain, long isPublic, long maxFee, string tpid, string actor)
+        public setdomainpub(string fioDomain, ulong isPublic, ulong maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.isPublic = isPublic;
@@ -678,11 +713,11 @@ namespace FioSharp.Core.Api.v1
         string name = "xferdomain";
         public string fioDomain;
         public string newOwnerFioPublicKey;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public xferdomain(string fioDomain, string newOwnerFioPublicKey, long maxFee, string tpid, string actor)
+        public xferdomain(string fioDomain, string newOwnerFioPublicKey, ulong maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.newOwnerFioPublicKey = newOwnerFioPublicKey;
@@ -715,11 +750,11 @@ namespace FioSharp.Core.Api.v1
         string name = "addnft";
         public string fioAddress;
         public List<object> nfts;
-        public long maxFee;
+        public ulong maxFee;
         public string actor;
         public string tpid;
 
-        public addnft(string fioAddress, List<object> nfts, long maxFee, string actor, string tpid)
+        public addnft(string fioAddress, List<object> nfts, ulong maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.nfts = nfts;
@@ -752,11 +787,11 @@ namespace FioSharp.Core.Api.v1
         string name = "remnft";
         public string fioAddress;
         public List<object> nfts;
-        public long maxFee;
+        public ulong maxFee;
         public string actor;
         public string tpid;
 
-        public remnft(string fioAddress, List<object> nfts, long maxFee, string actor, string tpid)
+        public remnft(string fioAddress, List<object> nfts, ulong maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.nfts = nfts;
@@ -788,11 +823,11 @@ namespace FioSharp.Core.Api.v1
         string contract = "fio.address";
         string name = "remallnfts";
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string actor;
         public string tpid;
 
-        public remallnfts(string fioAddress, long maxFee, string actor, string tpid)
+        public remallnfts(string fioAddress, ulong maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
@@ -820,15 +855,15 @@ namespace FioSharp.Core.Api.v1
           
     public class stakefio : ITransaction
     {
-        string contract = "fio.address";
+        string contract = "fio.staking";
         string name = "stakefio";
-        public long amount;
+        public ulong amount;
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public stakefio(long amount, string fioAddress, long maxFee, string tpid, string actor)
+        public stakefio(ulong amount, string fioAddress, ulong maxFee, string tpid, string actor)
         {
             this.amount = amount;
             this.fioAddress = fioAddress;
@@ -857,15 +892,15 @@ namespace FioSharp.Core.Api.v1
           
     public class unstakefio : ITransaction
     {
-        string contract = "fio.address";
+        string contract = "fio.staking";
         string name = "unstakefio";
-        public long amount;
+        public ulong amount;
         public string fioAddress;
-        public long maxFee;
+        public ulong maxFee;
         public string tpid;
         public string actor;
 
-        public unstakefio(long amount, string fioAddress, long maxFee, string tpid, string actor)
+        public unstakefio(ulong amount, string fioAddress, ulong maxFee, string tpid, string actor)
         {
             this.amount = amount;
             this.fioAddress = fioAddress;
@@ -899,9 +934,9 @@ namespace FioSharp.Core.Api.v1
         public List<object> producers;
         public string fioAddress;
         public string actor;
-        public long maxFee;
+        public ulong maxFee;
 
-        public voteproducer(List<object> producers, string fioAddress, string actor, long maxFee)
+        public voteproducer(List<object> producers, string fioAddress, string actor, ulong maxFee)
         {
             this.producers = producers;
             this.fioAddress = fioAddress;
@@ -934,9 +969,9 @@ namespace FioSharp.Core.Api.v1
         public string proxy;
         public string fioAddress;
         public string actor;
-        public long maxFee;
+        public ulong maxFee;
 
-        public voteproxy(string proxy, string fioAddress, string actor, long maxFee)
+        public voteproxy(string proxy, string fioAddress, string actor, ulong maxFee)
         {
             this.proxy = proxy;
             this.fioAddress = fioAddress;
@@ -968,9 +1003,9 @@ namespace FioSharp.Core.Api.v1
         string name = "regproxy";
         public string fioAddress;
         public string actor;
-        public long maxFee;
+        public ulong maxFee;
 
-        public regproxy(string fioAddress, string actor, long maxFee)
+        public regproxy(string fioAddress, string actor, ulong maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
@@ -1000,10 +1035,10 @@ namespace FioSharp.Core.Api.v1
         string contract = "eosio";
         string name = "unregproxy";
         public string fioAddress;
-        public long actor;
-        public long maxFee;
+        public ulong actor;
+        public ulong maxFee;
 
-        public unregproxy(string fioAddress, long actor, long maxFee)
+        public unregproxy(string fioAddress, ulong actor, ulong maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
@@ -1035,11 +1070,11 @@ namespace FioSharp.Core.Api.v1
         public string fioAddress;
         public string fioPubKey;
         public string url;
-        public long location;
+        public ulong location;
         public string actor;
-        public long maxFee;
+        public ulong maxFee;
 
-        public regproducer(string fioAddress, string fioPubKey, string url, long location, string actor, long maxFee)
+        public regproducer(string fioAddress, string fioPubKey, string url, ulong location, string actor, ulong maxFee)
         {
             this.fioAddress = fioAddress;
             this.fioPubKey = fioPubKey;
@@ -1073,9 +1108,9 @@ namespace FioSharp.Core.Api.v1
         string name = "unregprod";
         public string fioAddress;
         public string actor;
-        public long maxFee;
+        public ulong maxFee;
 
-        public unregprod(string fioAddress, string actor, long maxFee)
+        public unregprod(string fioAddress, string actor, ulong maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
@@ -1135,10 +1170,10 @@ namespace FioSharp.Core.Api.v1
     {
         string contract = "fio.fee";
         string name = "setfeemult";
-        public long multiplier;
+        public ulong multiplier;
         public string actor;
 
-        public setfeemult(long multiplier, string actor)
+        public setfeemult(ulong multiplier, string actor)
         {
             this.multiplier = multiplier;
             this.actor = actor;
@@ -1195,10 +1230,10 @@ namespace FioSharp.Core.Api.v1
     {
         string contract = "fio.fee";
         string name = "bundlevote";
-        public long bundledTransactions;
+        public ulong bundledTransactions;
         public string actor;
 
-        public bundlevote(long bundledTransactions, string actor)
+        public bundlevote(ulong bundledTransactions, string actor)
         {
             this.bundledTransactions = bundledTransactions;
             this.actor = actor;

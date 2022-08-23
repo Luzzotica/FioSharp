@@ -9,7 +9,7 @@ ignored_endpoints = ['transaction', 'packed_transaction']
 
 LIST_TYPE = 'array'
 YAML_TYPE_TO_CS = {
-  'integer': 'long',
+  'integer': 'ulong',
   'boolean': 'bool',
   'array': 'List'
 }
@@ -40,8 +40,8 @@ TRANSACTION_TO_CONTRACT = {
   'addnft': 'fio.address',
   'remnft': 'fio.address',
   'remallnfts': 'fio.address',
-  'stakefio': 'fio.address',
-  'unstakefio': 'fio.address',
+  'stakefio': 'fio.staking',
+  'unstakefio': 'fio.staking',
   'voteproducer': 'eosio',
   'voteproxy': 'eosio',
   'regproxy': 'eosio',
@@ -217,7 +217,7 @@ namespace FioSharp.Core.Api.v1
         string hash;
         string offlineUrl;
 
-        public newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo, string hash, string offlineUrl)
+        public newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo = null, string hash = null, string offlineUrl = null)
         {
             this.payeePublicAddress = payeePublicAddress;
             this.amount = amount;
@@ -231,7 +231,42 @@ namespace FioSharp.Core.Api.v1
         public Dictionary<string, object> ToJsonObject()
         {
             return new Dictionary<string, object>() {
-                { "payee_public_key", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl },
+                { "payee_public_address", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl }
+            };
+        }
+    }
+
+    public class recordobt_content : ITransactionContent
+    {
+        string payerPublicAddress;
+        string payeePublicAddress;
+        string amount;
+        string chainCode;
+        string tokenCode;
+        string status;
+        string obtId;
+        string memo;
+        string hash;
+        string offlineUrl;
+
+        public recordobt_content(string payerPublicAddress, string payeePublicAddress, string amount, string chainCode, string tokenCode, string status, string obtId, string memo = null, string hash = null, string offlineUrl = null)
+        {
+            this.payerPublicAddress = payerPublicAddress;
+            this.payeePublicAddress = payeePublicAddress;
+            this.amount = amount;
+            this.chainCode = chainCode;
+            this.tokenCode = tokenCode;
+            this.status = status;
+            this.obtId = obtId;
+            this.memo = memo;
+            this.hash = hash;
+            this.offlineUrl = offlineUrl;
+        }
+
+        public Dictionary<string, object> ToJsonObject()
+        {
+            return new Dictionary<string, object>() {
+                { "payer_public_address", payerPublicAddress }, { "payee_public_address", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "status", status }, { "obt_id", obtId}, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl }
             };
         }
     }

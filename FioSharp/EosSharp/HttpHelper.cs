@@ -210,23 +210,26 @@ namespace FioSharp
 
             // If we succeeded, return the stream
             if (response.IsSuccessStatusCode)
+            {
                 return stream;
+            }
 
             var content = await StreamToStringAsync(stream);
+            Console.WriteLine(content);
 
             ApiErrorException apiError;
             try
             {
-                Console.WriteLine("Response Content:");
-                Console.WriteLine(content);
+                //Console.WriteLine("Response Content:");
+                //Console.WriteLine(content);
                 //Dictionary<string, dynamic> jsonResp = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
                 //apiError = new ApiErrorException((int)response.StatusCode, jsonResp);
                 apiError = JsonConvert.DeserializeObject<ApiErrorException>(content);
                 apiError.code = (int)response.StatusCode;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                Console.WriteLine("Other Exception: " + e.ToString());
+                //Console.WriteLine("Other Exception: " + e.ToString());
                 throw new ApiException
                 {
                     StatusCode = (int)response.StatusCode,
@@ -280,9 +283,10 @@ namespace FioSharp
         /// <returns>request message</returns>
         public HttpRequestMessage BuildJsonRequestMessage(string url, object data)
         {
+            string jason = JsonConvert.SerializeObject(data);
             return new HttpRequestMessage(HttpMethod.Post, url)
             {
-                Content = new StringContent(JsonConvert.SerializeObject(data), Encoding.UTF8, "application/json")
+                Content = new StringContent(jason, Encoding.UTF8, "application/json")
             };
         }
     }

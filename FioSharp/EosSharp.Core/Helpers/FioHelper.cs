@@ -58,7 +58,7 @@ namespace FioSharp.Core.Helpers
             recordObtDataContent = new AbiStruct();
             recordObtDataContent.name = RECORD_OBT_DATA_CONTENT;
             recordObtDataContent.@base = "";
-            newFundsContent.fields = new List<AbiField>();
+            recordObtDataContent.fields = new List<AbiField>();
             recordObtDataContent.fields.Add(MakeAbiField("payer_public_address", "string"));
             recordObtDataContent.fields.Add(MakeAbiField("payee_public_address", "string"));
             recordObtDataContent.fields.Add(MakeAbiField("amount", "string"));

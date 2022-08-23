@@ -172,15 +172,17 @@ namespace FioSharp.Core.Api.v1
 		[AbiFieldType("float64")]
 		public double total_votes;
 		[AbiFieldType("public_key")]
-		public string producer_key;
-		
+		public string producer_fio_public_key;
+
+		public string fio_address;
+
 		public bool is_active;
 		
 		public string url;
 		
 		public UInt32 unpaid_blocks;
 		
-		public UInt64 last_claim_time;
+		public string last_claim_time;
 		
 		public UInt16 location;
     }
@@ -578,7 +580,7 @@ namespace FioSharp.Core.Api.v1
 		public string payee_fio_address;
 		public string payer_fio_public_key;
 		public string payee_fio_public_key;
-		public ObtDataContent content;
+		public string content;
 		public string status;
 		public DateTime time_stamp;
 	}
@@ -942,8 +944,7 @@ namespace FioSharp.Core.Api.v1
 	[Serializable]
     public class GetProducersResponse
     {
- 
-		public List<object> rows;
+		public List<Producer> producers;
  
 		public double total_producer_vote_weight;
  

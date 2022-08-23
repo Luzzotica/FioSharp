@@ -51,7 +51,17 @@ namespace FioSharp.Core.Exceptions
 
         public override string ToString()
         {
-            return message;
+            string m = message;
+            if (fields != null)
+            {
+                m += "\n";
+                foreach (ApiErrorField e in fields)
+                {
+                    m += e + "\n";
+                }
+            }
+
+            return m;
         }
     }
 
@@ -64,5 +74,10 @@ namespace FioSharp.Core.Exceptions
         public string name;
         public string value;
         public string error;
+
+        public override string ToString()
+        {
+            return name + " " + value + " " + error;
+        }
     }
 }

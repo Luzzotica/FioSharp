@@ -44,7 +44,7 @@ namespace FioSharp.Core
         /// <param name="trx">Transaction to send</param>
         /// <param name="requiredKeys">Override required keys to sign transaction</param>
         /// <returns>transaction id</returns>
-        public async Task<string> CreateTransaction(Transaction trx)
+        public async Task<PushTransactionResponse> CreateTransaction(Transaction trx)
         {
             var signedTrx = await SignTransaction(trx);
             return await BroadcastTransaction(signedTrx);
@@ -84,20 +84,6 @@ namespace FioSharp.Core
                 trx.expiration = getBlockResult.timestamp.AddSeconds(FioConfig.ExpireSeconds);
                 trx.ref_block_num = (UInt16)(getBlockResult.block_num & 0xFFFF);
                 trx.ref_block_prefix = getBlockResult.ref_block_prefix;
-                //if ((taposBlockNum - getInfoResult.last_irreversible_block_num) < 2)
-                //{
-
-                //}
-                //else
-                //{
-                //    var getBlockHeaderState = await Api.GetBlockHeaderState(new GetBlockHeaderStateRequest()
-                //    {
-                //        block_num_or_id = taposBlockNum.ToString()
-                //    });
-                //    trx.expiration = getBlockHeaderState.header.timestamp.AddSeconds(FioConfig.ExpireSeconds);
-                //    trx.ref_block_num = (UInt16)(getBlockHeaderState.block_num & 0xFFFF);
-                //    trx.ref_block_prefix = Convert.ToUInt32(SerializationHelper.ReverseHex(getBlockHeaderState.id.Substring(16, 8)), 16);
-                //}
             }
 
             // Serialize the transaction, get our required keys, and get the abi for the account
@@ -121,14 +107,14 @@ namespace FioSharp.Core
         /// </summary>
         /// <param name="strx">Signed transaction to send</param>
         /// <returns></returns>
-        public async Task<string> BroadcastTransaction(SignedTransaction strx)
+        public async Task<PushTransactionResponse> BroadcastTransaction(SignedTransaction strx)
         {
             if (strx == null)
                 throw new ArgumentNullException("SignedTransaction");
 
             PushTransactionResponse result = await Api.PushTransaction(strx.Signatures.ToArray(),
                 SerializationHelper.ByteArrayToHexString(strx.PackedTransaction));
-            return result.transaction_id;
+            return result;
         }
 
         #endregion

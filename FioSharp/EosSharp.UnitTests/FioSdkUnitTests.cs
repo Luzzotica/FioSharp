@@ -29,7 +29,7 @@ namespace FioSharp.UnitTests
         const string knownPublicKey = "FIO5g9NUxPpbiupHicH4ZMjqaLYLAghbARXMvJMkZv5uPx4MAbnZg";
         const string knownActor = "bepto5rwh5gy";
 
-        long defaultFee = FioSdk.AmountToSUF(80);
+        ulong defaultFee = FioSdk.AmountToSUF(1000);
 
         string newFioDomain = "";
         string newFioAddress = "";
@@ -83,9 +83,17 @@ namespace FioSharp.UnitTests
         }
 
         [Test]
-        public void ConfirmGetActor()
+        public void GetActor()
         {
+            Console.WriteLine(fioSdkKnown.GetActor());
             Assert.AreEqual(knownActor, fioSdkKnown.GetActor());
+        }
+
+        [Test]
+        public void GetFioPublicKey()
+        {
+            Console.WriteLine(fioSdkKnown.GetPublicKey());
+            Assert.AreEqual(knownPublicKey, fioSdkKnown.GetPublicKey());
         }
 
         [Test]
@@ -96,7 +104,7 @@ namespace FioSharp.UnitTests
                 await fioFaucet.PushTransaction(new trnsfiopubky(
                     fioSdkKnown.GetPublicKey(),
                     FioSdk.AmountToSUF(10),
-                    defaultFee,
+                    0,
                     "",
                     fioFaucet.GetActor()));
                 Assert.Fail("Low max fee didn't throw an error");
@@ -126,7 +134,7 @@ namespace FioSharp.UnitTests
         [Test]
         public void FioSUFUtilities()
         {
-            long suf = FioSdk.AmountToSUF(100);
+            ulong suf = FioSdk.AmountToSUF(100);
             Assert.AreEqual(suf, 100000000000);
             suf = FioSdk.AmountToSUF(500);
             Assert.AreEqual(suf, 500000000000);
@@ -176,10 +184,24 @@ namespace FioSharp.UnitTests
             Assert.IsTrue(FioSdk.IsPublicAddressValid(knownPublicKey));
         }
 
-        [Test]
-        public void GetFioPublicKey()
-        {
-            Assert.AreEqual(knownPublicKey, fioSdkKnown.GetPublicKey());
-        }
+
+        //[Test]
+        //public async Task TestCanonical()
+        //{
+        //    try
+        //    {
+        //        await fioSdkKnown.PushTransaction(new trnsfiopubky(
+        //            fioFaucet.GetPublicKey(),
+        //            FioSdk.AmountToSUF(10),
+        //            defaultFee,
+        //            "",
+        //            fioSdkKnown.GetActor()));
+        //        Assert.Fail("Looking for canonical failure...");
+        //    }
+        //    catch (ApiErrorException e)
+        //    {
+        //        Assert.Fail(e.ToString());
+        //    }
+        //}
     }
 }

@@ -14,7 +14,7 @@ namespace FioSharp
 {
     public class FioSdk : IFioSdk
     {
-        public static int SUFUnit = 1000000000;
+        public static ulong SUFUnit = 1000000000;
 
         public static MnemonicKey CreatePrivateKey(byte[] entropy = null)
         {
@@ -68,7 +68,7 @@ namespace FioSharp
             return Validation.Validate(publicAddress, RegexExpressions.NATIVE_BLOCKCHAIN_ADDRESS);
         }
 
-        public static long AmountToSUF(double amount)
+        public static ulong AmountToSUF(double amount)
         {
             double floor = Math.Floor(amount);
             double tempResult = floor * SUFUnit;
@@ -77,12 +77,12 @@ namespace FioSharp
             double remainderResult = remainder * SUFUnit;
             double floorRemainder = Math.Floor(remainderResult);
 
-            return (long)(tempResult + floorRemainder);
+            return (ulong)(tempResult + floorRemainder);
         }
 
-        public static double SUFToAmount(double suf)
+        public static double SUFToAmount(ulong suf)
         {
-            return suf / SUFUnit;
+            return suf / (double)SUFUnit;
         }
 
         string privateKey;
@@ -152,7 +152,7 @@ namespace FioSharp
 
         #region Transaction Handling
 
-        public async Task<string> PushTransaction(ITransaction data)
+        public async Task<PushTransactionResponse> PushTransaction(ITransaction data)
         {
             Core.Api.v1.Action action = new Core.Api.v1.Action
             {
@@ -164,7 +164,7 @@ namespace FioSharp
             return await PushTransaction(action);
         }
 
-        public async Task<string> PushTransaction(Core.Api.v1.Action action,
+        public async Task<PushTransactionResponse> PushTransaction(Core.Api.v1.Action action,
             List<Core.Api.v1.Action> contextFreeActions = null,
             List<Extension> transactionExtensions = null)
         {
@@ -173,7 +173,7 @@ namespace FioSharp
                 transactionExtensions: transactionExtensions);
         }
 
-        public async Task<string> PushTransaction(List<Core.Api.v1.Action> actions,
+        public async Task<PushTransactionResponse> PushTransaction(List<Core.Api.v1.Action> actions,
             List<Core.Api.v1.Action> contextFreeActions = null,
             List<Extension> transactionExtensions = null)
         {

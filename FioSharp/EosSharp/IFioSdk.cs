@@ -24,7 +24,7 @@ namespace FioSharp
 
         Task<string> DHEncrypt(string publicKey, string fioContentType, Dictionary<string, dynamic> content);
         Task<Dictionary<string, dynamic>> DHDecrypt(string publicKey, string fioContentType, string content);
-        Task<string> PushTransaction(List<Core.Api.v1.Action> actions,
+        Task<PushTransactionResponse> PushTransaction(List<Core.Api.v1.Action> actions,
             List<Core.Api.v1.Action> contextFreeActions = null,
             List<Extension> transactionExtensions = null);
 
