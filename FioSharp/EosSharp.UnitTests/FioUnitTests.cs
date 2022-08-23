@@ -175,8 +175,8 @@ namespace FioSharp.UnitTests
                 };
 
                 //var requiredKeys = new List<string>() { "FIO5g9NUxPpbiupHicH4ZMjqaLYLAghbARXMvJMkZv5uPx4MAbnZg" };
-                string response = await Fio.CreateTransaction(trx);//, requiredKeys);
-                Console.WriteLine(response);
+                PushTransactionResponse response = await Fio.CreateTransaction(trx);//, requiredKeys);
+                Console.WriteLine(response.transaction_id);
             }
             catch (Exception e)
             {

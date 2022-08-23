@@ -77,6 +77,7 @@ namespace FioSharp.UnitTests
             string privKey2 = FioSdk.CreatePrivateKey().fioPrivateKey;
             Console.WriteLine("Priv Key 1: " + privKey1);
             Console.WriteLine("Priv Key 2: " + privKey2);
+            
             fioSdk1 = new FioSdk(
                 privKey1,
                 devnetUrl
@@ -87,6 +88,8 @@ namespace FioSharp.UnitTests
             );
             await fioSdk1.Init();
             await fioSdk2.Init();
+            Console.WriteLine("Pub Key 1: " + fioSdk1.GetPublicKey());
+            Console.WriteLine("Pub Key 2: " + fioSdk1.GetPublicKey());
 
             // Create a domain for our own use
             //testDomain = GenerateTestingFioDomain();
@@ -750,7 +753,7 @@ namespace FioSharp.UnitTests
         //        // Wait for block to confirm
         //        await Task.Delay(defaultWait);
 
-        //        GetProducersResponse getProducers = await fioSdk1.GetFioApi().GetProducers("50", "...........1f", true);
+        //        GetProducersResponse getProducers = await fioSdk1.GetFioApi().GetProducers("2", "...........1f", true);
         //        Console.WriteLine(getProducers.total_producer_vote_weight);
         //        Console.WriteLine(getProducers.producers.Count);
         //        Console.WriteLine(getProducers.more);
