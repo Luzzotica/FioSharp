@@ -5,26 +5,73 @@ using System.Threading.Tasks;
   
 namespace FioSharp.Core.Api.v1
 {
-    public interface ITransactionData
+    public interface ITransaction : ITransactionContent
     {
-      Dictionary<string, object> ToJsonObject();
+        string GetContract();
+        string GetName();
+    }
+
+    public interface ITransactionContent
+    {
+        Dictionary<string, object> ToJsonObject();
+    }
+
+    public class newfundsreq_content : ITransactionContent
+    {
+        string payeePublicAddress;
+        string amount;
+        string chainCode;
+        string tokenCode;
+        string memo;
+        string hash;
+        string offlineUrl;
+
+        newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo, string hash, string offlineUrl)
+        {
+            this.payeePublicAddress = payeePublicAddress;
+            this.amount = amount;
+            this.chainCode = chainCode;
+            this.tokenCode = tokenCode;
+            this.memo = memo;
+            this.hash = hash;
+            this.offlineUrl = offlineUrl;
+        }
+
+        public Dictionary<string, object> ToJsonObject()
+        {
+            return new Dictionary<string, object>() {
+                { "payee_public_key", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl },
+            };
+        }
     }
   
-    public class trnsfiopubky : ITransactionData 
+    public class trnsfiopubky : ITransaction
     {
+        string contract = "fio.token";
+        string name = "trnsfiopubky";
         public string payeePublicKey;
-        public int amount;
-        public int maxFee;
+        public long amount;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public trnsfiopubky(string payeePublicKey, int amount, int maxFee, string tpid, string actor)
+        public trnsfiopubky(string payeePublicKey, long amount, long maxFee, string tpid, string actor)
         {
             this.payeePublicKey = payeePublicKey;
             this.amount = amount;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -35,17 +82,19 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class trnsloctoks : ITransactionData 
+    public class trnsloctoks : ITransaction
     {
+        string contract = "fio.token";
+        string name = "trnsloctoks";
         public string payeePublicKey;
-        public int canVote;
+        public long canVote;
         public List<object> periods;
-        public int amount;
-        public int maxFee;
+        public long amount;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public trnsloctoks(string payeePublicKey, int canVote, List<object> periods, int amount, int maxFee, string tpid, string actor)
+        public trnsloctoks(string payeePublicKey, long canVote, List<object> periods, long amount, long maxFee, string tpid, string actor)
         {
             this.payeePublicKey = payeePublicKey;
             this.canVote = canVote;
@@ -56,6 +105,16 @@ namespace FioSharp.Core.Api.v1
             this.actor = actor;
         }
 
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
+        }
+
         public Dictionary<string, object> ToJsonObject() 
         {
             return new Dictionary<string, object>() {
@@ -64,21 +123,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class addaddress : ITransactionData 
+    public class addaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "addaddress";
         public string fioAddress;
         public List<object> publicAddresses;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public addaddress(string fioAddress, List<object> publicAddresses, int maxFee, string tpid, string actor)
+        public addaddress(string fioAddress, List<object> publicAddresses, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.publicAddresses = publicAddresses;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -89,21 +160,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class remaddress : ITransactionData 
+    public class remaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "remaddress";
         public string fioAddress;
         public List<object> publicAddresses;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public remaddress(string fioAddress, List<object> publicAddresses, int maxFee, string tpid, string actor)
+        public remaddress(string fioAddress, List<object> publicAddresses, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.publicAddresses = publicAddresses;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -114,19 +197,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class remalladdr : ITransactionData 
+    public class remalladdr : ITransaction
     {
+        string contract = "fio.address";
+        string name = "remalladdr";
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public remalladdr(string fioAddress, int maxFee, string tpid, string actor)
+        public remalladdr(string fioAddress, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -137,16 +232,18 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class newfundsreq : ITransactionData 
+    public class newfundsreq : ITransaction
     {
+        string contract = "fio.reqobt";
+        string name = "newfundsreq";
         public string payerFioAddress;
         public string payeeFioAddress;
         public string tpid;
         public object content;
-        public int maxFee;
+        public long maxFee;
         public string actor;
 
-        public newfundsreq(string payerFioAddress, string payeeFioAddress, string tpid, object content, int maxFee, string actor)
+        public newfundsreq(string payerFioAddress, string payeeFioAddress, string tpid, object content, long maxFee, string actor)
         {
             this.payerFioAddress = payerFioAddress;
             this.payeeFioAddress = payeeFioAddress;
@@ -154,6 +251,16 @@ namespace FioSharp.Core.Api.v1
             this.content = content;
             this.maxFee = maxFee;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -164,19 +271,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class cancelfndreq : ITransactionData 
+    public class cancelfndreq : ITransaction
     {
+        string contract = "fio.reqobt";
+        string name = "cancelfndreq";
         public string fioRequestId;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public cancelfndreq(string fioRequestId, int maxFee, string tpid, string actor)
+        public cancelfndreq(string fioRequestId, long maxFee, string tpid, string actor)
         {
             this.fioRequestId = fioRequestId;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -187,19 +306,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class rejectfndreq : ITransactionData 
+    public class rejectfndreq : ITransaction
     {
+        string contract = "fio.reqobt";
+        string name = "rejectfndreq";
         public string fioRequestId;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public rejectfndreq(string fioRequestId, int maxFee, string tpid, string actor)
+        public rejectfndreq(string fioRequestId, long maxFee, string tpid, string actor)
         {
             this.fioRequestId = fioRequestId;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -210,17 +341,19 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class recordobt : ITransactionData 
+    public class recordobt : ITransaction
     {
+        string contract = "fio.reqobt";
+        string name = "recordobt";
         public string payerFioAddress;
         public string payeeFioAddress;
         public object content;
         public string fioRequestId;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public recordobt(string payerFioAddress, string payeeFioAddress, object content, string fioRequestId, int maxFee, string tpid, string actor)
+        public recordobt(string payerFioAddress, string payeeFioAddress, object content, string fioRequestId, long maxFee, string tpid, string actor)
         {
             this.payerFioAddress = payerFioAddress;
             this.payeeFioAddress = payeeFioAddress;
@@ -231,6 +364,16 @@ namespace FioSharp.Core.Api.v1
             this.actor = actor;
         }
 
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
+        }
+
         public Dictionary<string, object> ToJsonObject() 
         {
             return new Dictionary<string, object>() {
@@ -239,21 +382,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class regaddress : ITransactionData 
+    public class regaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "regaddress";
         public string fioAddress;
         public string ownerFioPublicKey;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public regaddress(string fioAddress, string ownerFioPublicKey, int maxFee, string tpid, string actor)
+        public regaddress(string fioAddress, string ownerFioPublicKey, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.ownerFioPublicKey = ownerFioPublicKey;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -264,19 +419,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class renewaddress : ITransactionData 
+    public class renewaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "renewaddress";
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public renewaddress(string fioAddress, int maxFee, string tpid, string actor)
+        public renewaddress(string fioAddress, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -287,21 +454,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class addbundles : ITransactionData 
+    public class addbundles : ITransaction
     {
+        string contract = "fio.address";
+        string name = "addbundles";
         public string fioAddress;
-        public int bundleSets;
-        public int maxFee;
+        public long bundleSets;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public addbundles(string fioAddress, int bundleSets, int maxFee, string tpid, string actor)
+        public addbundles(string fioAddress, long bundleSets, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.bundleSets = bundleSets;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -312,21 +491,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class xferaddress : ITransactionData 
+    public class xferaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "xferaddress";
         public string fioAddress;
         public string newOwnerFioPublicKey;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public xferaddress(string fioAddress, string newOwnerFioPublicKey, int maxFee, string tpid, string actor)
+        public xferaddress(string fioAddress, string newOwnerFioPublicKey, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.newOwnerFioPublicKey = newOwnerFioPublicKey;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -337,19 +528,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class burnaddress : ITransactionData 
+    public class burnaddress : ITransaction
     {
+        string contract = "fio.address";
+        string name = "burnaddress";
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public burnaddress(string fioAddress, int maxFee, string tpid, string actor)
+        public burnaddress(string fioAddress, long maxFee, string tpid, string actor)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -360,21 +563,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class regdomain : ITransactionData 
+    public class regdomain : ITransaction
     {
+        string contract = "fio.address";
+        string name = "regdomain";
         public string fioDomain;
         public string ownerFioPublicKey;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public regdomain(string fioDomain, string ownerFioPublicKey, int maxFee, string tpid, string actor)
+        public regdomain(string fioDomain, string ownerFioPublicKey, long maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.ownerFioPublicKey = ownerFioPublicKey;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -385,19 +600,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class renewdomain : ITransactionData 
+    public class renewdomain : ITransaction
     {
+        string contract = "fio.address";
+        string name = "renewdomain";
         public string fioDomain;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public renewdomain(string fioDomain, int maxFee, string tpid, string actor)
+        public renewdomain(string fioDomain, long maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -408,21 +635,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class setdomainpub : ITransactionData 
+    public class setdomainpub : ITransaction
     {
+        string contract = "fio.address";
+        string name = "setdomainpub";
         public string fioDomain;
-        public int isPublic;
-        public int maxFee;
+        public long isPublic;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public setdomainpub(string fioDomain, int isPublic, int maxFee, string tpid, string actor)
+        public setdomainpub(string fioDomain, long isPublic, long maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.isPublic = isPublic;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -433,21 +672,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class xferdomain : ITransactionData 
+    public class xferdomain : ITransaction
     {
+        string contract = "fio.address";
+        string name = "xferdomain";
         public string fioDomain;
         public string newOwnerFioPublicKey;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public xferdomain(string fioDomain, string newOwnerFioPublicKey, int maxFee, string tpid, string actor)
+        public xferdomain(string fioDomain, string newOwnerFioPublicKey, long maxFee, string tpid, string actor)
         {
             this.fioDomain = fioDomain;
             this.newOwnerFioPublicKey = newOwnerFioPublicKey;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -458,21 +709,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class addnft : ITransactionData 
+    public class addnft : ITransaction
     {
+        string contract = "fio.address";
+        string name = "addnft";
         public string fioAddress;
         public List<object> nfts;
-        public int maxFee;
+        public long maxFee;
         public string actor;
         public string tpid;
 
-        public addnft(string fioAddress, List<object> nfts, int maxFee, string actor, string tpid)
+        public addnft(string fioAddress, List<object> nfts, long maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.nfts = nfts;
             this.maxFee = maxFee;
             this.actor = actor;
             this.tpid = tpid;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -483,21 +746,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class remnft : ITransactionData 
+    public class remnft : ITransaction
     {
+        string contract = "fio.address";
+        string name = "remnft";
         public string fioAddress;
         public List<object> nfts;
-        public int maxFee;
+        public long maxFee;
         public string actor;
         public string tpid;
 
-        public remnft(string fioAddress, List<object> nfts, int maxFee, string actor, string tpid)
+        public remnft(string fioAddress, List<object> nfts, long maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.nfts = nfts;
             this.maxFee = maxFee;
             this.actor = actor;
             this.tpid = tpid;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -508,19 +783,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class remallnfts : ITransactionData 
+    public class remallnfts : ITransaction
     {
+        string contract = "fio.address";
+        string name = "remallnfts";
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string actor;
         public string tpid;
 
-        public remallnfts(string fioAddress, int maxFee, string actor, string tpid)
+        public remallnfts(string fioAddress, long maxFee, string actor, string tpid)
         {
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.actor = actor;
             this.tpid = tpid;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -531,21 +818,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class stakefio : ITransactionData 
+    public class stakefio : ITransaction
     {
-        public int amount;
+        string contract = "fio.address";
+        string name = "stakefio";
+        public long amount;
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public stakefio(int amount, string fioAddress, int maxFee, string tpid, string actor)
+        public stakefio(long amount, string fioAddress, long maxFee, string tpid, string actor)
         {
             this.amount = amount;
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -556,21 +855,33 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class unstakefio : ITransactionData 
+    public class unstakefio : ITransaction
     {
-        public int amount;
+        string contract = "fio.address";
+        string name = "unstakefio";
+        public long amount;
         public string fioAddress;
-        public int maxFee;
+        public long maxFee;
         public string tpid;
         public string actor;
 
-        public unstakefio(int amount, string fioAddress, int maxFee, string tpid, string actor)
+        public unstakefio(long amount, string fioAddress, long maxFee, string tpid, string actor)
         {
             this.amount = amount;
             this.fioAddress = fioAddress;
             this.maxFee = maxFee;
             this.tpid = tpid;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -581,19 +892,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class voteproducer : ITransactionData 
+    public class voteproducer : ITransaction
     {
+        string contract = "eosio";
+        string name = "voteproducer";
         public List<object> producers;
         public string fioAddress;
         public string actor;
-        public int maxFee;
+        public long maxFee;
 
-        public voteproducer(List<object> producers, string fioAddress, string actor, int maxFee)
+        public voteproducer(List<object> producers, string fioAddress, string actor, long maxFee)
         {
             this.producers = producers;
             this.fioAddress = fioAddress;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -604,19 +927,31 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class voteproxy : ITransactionData 
+    public class voteproxy : ITransaction
     {
+        string contract = "eosio";
+        string name = "voteproxy";
         public string proxy;
         public string fioAddress;
         public string actor;
-        public int maxFee;
+        public long maxFee;
 
-        public voteproxy(string proxy, string fioAddress, string actor, int maxFee)
+        public voteproxy(string proxy, string fioAddress, string actor, long maxFee)
         {
             this.proxy = proxy;
             this.fioAddress = fioAddress;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -627,17 +962,29 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class regproxy : ITransactionData 
+    public class regproxy : ITransaction
     {
+        string contract = "eosio";
+        string name = "regproxy";
         public string fioAddress;
         public string actor;
-        public int maxFee;
+        public long maxFee;
 
-        public regproxy(string fioAddress, string actor, int maxFee)
+        public regproxy(string fioAddress, string actor, long maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -648,17 +995,29 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class unregproxy : ITransactionData 
+    public class unregproxy : ITransaction
     {
+        string contract = "eosio";
+        string name = "unregproxy";
         public string fioAddress;
-        public int actor;
-        public int maxFee;
+        public long actor;
+        public long maxFee;
 
-        public unregproxy(string fioAddress, int actor, int maxFee)
+        public unregproxy(string fioAddress, long actor, long maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -669,16 +1028,18 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class regproducer : ITransactionData 
+    public class regproducer : ITransaction
     {
+        string contract = "eosio";
+        string name = "regproducer";
         public string fioAddress;
         public string fioPubKey;
         public string url;
-        public int location;
+        public long location;
         public string actor;
-        public int maxFee;
+        public long maxFee;
 
-        public regproducer(string fioAddress, string fioPubKey, string url, int location, string actor, int maxFee)
+        public regproducer(string fioAddress, string fioPubKey, string url, long location, string actor, long maxFee)
         {
             this.fioAddress = fioAddress;
             this.fioPubKey = fioPubKey;
@@ -686,6 +1047,16 @@ namespace FioSharp.Core.Api.v1
             this.location = location;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -696,17 +1067,29 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class unregprod : ITransactionData 
+    public class unregprod : ITransaction
     {
+        string contract = "eosio";
+        string name = "unregprod";
         public string fioAddress;
         public string actor;
-        public int maxFee;
+        public long maxFee;
 
-        public unregprod(string fioAddress, string actor, int maxFee)
+        public unregprod(string fioAddress, string actor, long maxFee)
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
             this.maxFee = maxFee;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -717,8 +1100,10 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class setfeevote : ITransactionData 
+    public class setfeevote : ITransaction
     {
+        string contract = "fio.fee";
+        string name = "setfeevote";
         public List<object> feeRatios;
         public string actor;
 
@@ -726,6 +1111,16 @@ namespace FioSharp.Core.Api.v1
         {
             this.feeRatios = feeRatios;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -736,15 +1131,27 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class setfeemult : ITransactionData 
+    public class setfeemult : ITransaction
     {
-        public int multiplier;
+        string contract = "fio.fee";
+        string name = "setfeemult";
+        public long multiplier;
         public string actor;
 
-        public setfeemult(int multiplier, string actor)
+        public setfeemult(long multiplier, string actor)
         {
             this.multiplier = multiplier;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -755,13 +1162,25 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class computefees : ITransactionData 
+    public class computefees : ITransaction
     {
+        string contract = "fio.fee";
+        string name = "computefees";
         
 
         public computefees()
         {
             
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -772,15 +1191,27 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class bundlevote : ITransactionData 
+    public class bundlevote : ITransaction
     {
-        public int bundledTransactions;
+        string contract = "fio.fee";
+        string name = "bundlevote";
+        public long bundledTransactions;
         public string actor;
 
-        public bundlevote(int bundledTransactions, string actor)
+        public bundlevote(long bundledTransactions, string actor)
         {
             this.bundledTransactions = bundledTransactions;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -791,13 +1222,25 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class tpidclaim : ITransactionData 
+    public class tpidclaim : ITransaction
     {
+        string contract = "fio.treasury";
+        string name = "tpidclaim";
         public string actor;
 
         public tpidclaim(string actor)
         {
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -808,8 +1251,10 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class bpclaim : ITransactionData 
+    public class bpclaim : ITransaction
     {
+        string contract = "fio.treasury";
+        string name = "bpclaim";
         public string fioAddress;
         public string actor;
 
@@ -817,6 +1262,16 @@ namespace FioSharp.Core.Api.v1
         {
             this.fioAddress = fioAddress;
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -827,13 +1282,25 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class burnexpired : ITransactionData 
+    public class burnexpired : ITransaction
     {
+        string contract = "fio.address";
+        string name = "burnexpired";
         
 
         public burnexpired()
         {
             
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 
@@ -844,13 +1311,25 @@ namespace FioSharp.Core.Api.v1
         }
     }
           
-    public class burnnfts : ITransactionData 
+    public class burnnfts : ITransaction
     {
+        string contract = "fio.address";
+        string name = "burnnfts";
         public string actor;
 
         public burnnfts(string actor)
         {
             this.actor = actor;
+        }
+
+        public string GetContract() 
+        {
+            return contract;
+        }
+
+        public string GetName() 
+        {
+            return name;
         }
 
         public Dictionary<string, object> ToJsonObject() 

@@ -237,6 +237,13 @@ namespace FioSharp.Core.Api.v1
 		public object data;
 		
 		public string hex_data;
+
+		//override
+		//string ToString()
+  //      {
+			
+		//	return "{\"account\":" + account + ", \"name\":" + name + "\"authorization\"" 
+  //      }
     }
 	[Serializable]
 	public class Transaction
@@ -1099,7 +1106,7 @@ namespace FioSharp.Core.Api.v1
 	[Serializable]
 	public class GetFioDomainsResponse
 	{
-		public List<FioAddress> fio_domains;
+		public List<FioDomain> fio_domains;
 		public int more;
 	}
 	[Serializable]

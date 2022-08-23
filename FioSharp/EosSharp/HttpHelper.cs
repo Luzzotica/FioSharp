@@ -217,11 +217,8 @@ namespace FioSharp
             ApiErrorException apiError;
             try
             {
-                Console.WriteLine();
                 Console.WriteLine("Response Content:");
                 Console.WriteLine(content);
-                Console.WriteLine();
-                Console.WriteLine();
                 //Dictionary<string, dynamic> jsonResp = JsonConvert.DeserializeObject<Dictionary<string, dynamic>>(content);
                 //apiError = new ApiErrorException((int)response.StatusCode, jsonResp);
                 apiError = JsonConvert.DeserializeObject<ApiErrorException>(content);
@@ -229,7 +226,7 @@ namespace FioSharp
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("Other Exception: " + e.ToString());
                 throw new ApiException
                 {
                     StatusCode = (int)response.StatusCode,
@@ -237,6 +234,7 @@ namespace FioSharp
                 };
             }
 
+            Console.WriteLine("Throwing Error: " + apiError.ToString());
             throw apiError;
         }
 

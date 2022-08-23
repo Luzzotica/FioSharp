@@ -132,19 +132,16 @@ namespace FioSharp.Core.Api.v1
         public async Task<TResponseData> GetJson<TResponseData>(string endpoint)
         {
             var url = string.Format("{0}/v1/chain/{1}", Config.HttpEndpoint, endpoint);
-            Console.WriteLine(url);
             return await HttpHandler.GetJsonAsync<TResponseData>(url);
         }
         public async Task<TResponseData> PostJson<TResponseData>(string endpoint, Dictionary<string, dynamic> data, bool reload = false)
         {
             var url = string.Format("{0}/v1/chain/{1}", Config.HttpEndpoint, endpoint);
-            Console.WriteLine(url);
             return await HttpHandler.PostJsonAsync<TResponseData>(url, data);
         }
         public async Task<TResponseData> PostJsonWithCache<TResponseData>(string endpoint, Dictionary<string, dynamic> data, bool reload = false)
         {
             var url = string.Format("{0}/v1/chain/{1}", Config.HttpEndpoint, endpoint);
-            Console.WriteLine(url);
             return await HttpHandler.PostJsonWithCacheAsync<TResponseData>(url, data, reload);
         }
 

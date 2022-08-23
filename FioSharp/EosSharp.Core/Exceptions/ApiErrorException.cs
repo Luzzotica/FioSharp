@@ -10,10 +10,10 @@ namespace FioSharp.Core.Exceptions
     [Serializable]
     public class ApiErrorException : Exception
     {
-        public int code;
-        public string type;
-        public string message;
-        public List<ApiErrorField> fields;
+        public int code { get; set; }
+        public string type { get; set; }
+        public string message { get; set; }
+        public List<ApiErrorField> fields { get; set; }
 
         //public ApiErrorException(int responseCode, Dictionary<string, dynamic> jsonResp)
         //{
@@ -26,7 +26,9 @@ namespace FioSharp.Core.Exceptions
         public ApiErrorException(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
+            {
                 return;
+            }
 
             foreach (SerializationEntry entry in info)
             {
@@ -36,7 +38,7 @@ namespace FioSharp.Core.Exceptions
                         type = info.GetString("type");
                         break;
                     case "message":
-                        type = info.GetString("message");
+                        message = info.GetString("message");
                         break;
                     case "fields":
                         fields = (List<ApiErrorField>)info.GetValue("fields", typeof(List<ApiErrorField>));

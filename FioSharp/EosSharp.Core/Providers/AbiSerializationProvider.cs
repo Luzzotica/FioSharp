@@ -466,7 +466,6 @@ namespace FioSharp.Core.Providers
 
         private static void WriteString(MemoryStream ms, object value)
         {
-            Console.WriteLine(value);
             var strBytes = Encoding.UTF8.GetBytes((string)value);
             WriteVarUint32(ms, (UInt32)strBytes.Length);
             if (strBytes.Length > 0)

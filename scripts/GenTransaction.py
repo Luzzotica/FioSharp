@@ -9,7 +9,7 @@ ignored_endpoints = ['transaction', 'packed_transaction']
 
 LIST_TYPE = 'array'
 YAML_TYPE_TO_CS = {
-  'integer': 'int',
+  'integer': 'long',
   'boolean': 'bool',
   'array': 'List'
 }
@@ -17,6 +17,46 @@ def get_cs_type(t):
   if t in YAML_TYPE_TO_CS:
     return YAML_TYPE_TO_CS[t]
   return t
+
+TRANSACTION_TO_CONTRACT = {
+  'trnsfiopubky': 'fio.token',
+  'trnsloctoks': 'fio.token',
+  'addaddress': 'fio.address',
+  'remaddress': 'fio.address',
+  'remalladdr': 'fio.address',
+  'newfundsreq': 'fio.reqobt',
+  'cancelfndreq': 'fio.reqobt',
+  'rejectfndreq': 'fio.reqobt',
+  'recordobt': 'fio.reqobt',
+  'regaddress': 'fio.address',
+  'renewaddress': 'fio.address',
+  'addbundles': 'fio.address',
+  'xferaddress': 'fio.address',
+  'burnaddress': 'fio.address',
+  'regdomain': 'fio.address',
+  'renewdomain': 'fio.address',
+  'setdomainpub': 'fio.address',
+  'xferdomain': 'fio.address',
+  'addnft': 'fio.address',
+  'remnft': 'fio.address',
+  'remallnfts': 'fio.address',
+  'stakefio': 'fio.address',
+  'unstakefio': 'fio.address',
+  'voteproducer': 'eosio',
+  'voteproxy': 'eosio',
+  'regproxy': 'eosio',
+  'unregproxy': 'eosio',
+  'regproducer': 'eosio',
+  'unregprod': 'eosio',
+  'setfeevote': 'fio.fee',
+  'setfeemult': 'fio.fee',
+  'computefees': 'fio.fee',
+  'bundlevote': 'fio.fee',
+  'tpidclaim': 'fio.treasury',
+  'bpclaim': 'fio.treasury',
+  'burnexpired': 'fio.address',
+  'burnnfts': 'fio.address',
+}
 
 
 def to_upper_camel_case(s):
@@ -113,13 +153,25 @@ def create_transaction_object(f: TextIOWrapper, obj_name: string, params: dict):
   print(params)
 
   f.write(f'''  
-    public class {obj_name} : ITransactionData 
+    public class {obj_name} : ITransaction
     {{
+        string contract = "{TRANSACTION_TO_CONTRACT[obj_name]}";
+        string name = "{obj_name}";
         {object_vars}
 
         public {obj_name}({param_list})
         {{
             {object_assignments}
+        }}
+
+        public string GetContract() 
+        {{
+            return contract;
+        }}
+
+        public string GetName() 
+        {{
+            return name;
         }}
 
         public Dictionary<string, object> ToJsonObject() 
@@ -144,9 +196,44 @@ using System.Threading.Tasks;
   
 namespace FioSharp.Core.Api.v1
 {
-    public interface ITransactionData
+    public interface ITransaction : ITransactionContent
     {
-      Dictionary<string, object> ToJsonObject();
+        string GetContract();
+        string GetName();
+    }
+
+    public interface ITransactionContent
+    {
+        Dictionary<string, object> ToJsonObject();
+    }
+
+    public class newfundsreq_content : ITransactionContent
+    {
+        string payeePublicAddress;
+        string amount;
+        string chainCode;
+        string tokenCode;
+        string memo;
+        string hash;
+        string offlineUrl;
+
+        public newfundsreq_content(string payeePublicAddress, string amount, string chainCode, string tokenCode, string memo, string hash, string offlineUrl)
+        {
+            this.payeePublicAddress = payeePublicAddress;
+            this.amount = amount;
+            this.chainCode = chainCode;
+            this.tokenCode = tokenCode;
+            this.memo = memo;
+            this.hash = hash;
+            this.offlineUrl = offlineUrl;
+        }
+
+        public Dictionary<string, object> ToJsonObject()
+        {
+            return new Dictionary<string, object>() {
+                { "payee_public_key", payeePublicAddress }, { "amount", amount }, { "chain_code", chainCode }, { "token_code", tokenCode }, { "memo", memo }, { "hash", hash }, { "offline_url", offlineUrl },
+            };
+        }
     }
 ''')
 

@@ -101,23 +101,18 @@ namespace FioSharp
         public Action<bool> setupComplete;
 
         public FioSdk(string privateKey,
+            string baseUrl,
             string publicKey="",
-            string baseUrl="",
             IHttpHandler httpHandler=null,
-            string technologyProviderId="",
-            bool test=false)
+            string technologyProviderId="")
         {
             this.privateKey = privateKey;
             this.publicKey = publicKey;
-            this.technologyProviderId = technologyProviderId;
-
-            string url = baseUrl;
-            if (url.Equals(""))
+            if (this.publicKey.Equals(""))
             {
-                url = test ? "https://testnet.fioprotocol.io:443" : "peer.fio.alohaeos.com:9876";
+                this.publicKey = FioSdk.DerivePublicKey(privateKey);
             }
-            string chainId = test ? "b20901380af44ef59c5918439a1f9a41d83669020319a80574b804a5f95cbd7e" :
-                "aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906";
+            this.technologyProviderId = technologyProviderId;
 
             var fioConfig = new FioConfigurator()
             {
@@ -125,8 +120,7 @@ namespace FioSharp
                     privateKey,
                 }),
 
-                HttpEndpoint = url,
-                ChainId = chainId
+                HttpEndpoint = baseUrl,
             };
 
             // Assign our fio config
@@ -135,6 +129,7 @@ namespace FioSharp
 
         public async Task Init()
         {
+            Fio.FioConfig.ChainId = (await Api.GetInfo()).chain_id;
             actor = (await Api.GetActor(publicKey)).actor;
             setupComplete?.Invoke(true);
         }
@@ -156,6 +151,18 @@ namespace FioSharp
         #endregion
 
         #region Transaction Handling
+
+        public async Task<string> PushTransaction(ITransaction data)
+        {
+            Core.Api.v1.Action action = new Core.Api.v1.Action
+            {
+                account = data.GetContract(),
+                name = data.GetName(),
+                authorization = GetAuthorization(),
+                data = data.ToJsonObject()
+            };
+            return await PushTransaction(action);
+        }
 
         public async Task<string> PushTransaction(Core.Api.v1.Action action,
             List<Core.Api.v1.Action> contextFreeActions = null,
@@ -192,6 +199,15 @@ namespace FioSharp
             };
 
             return await Fio.CreateTransaction(trx);
+        }
+
+        public List<PermissionLevel> GetAuthorization(string actor = "")
+        {
+            string a = actor.Equals("") ? GetActor() : actor;
+            return new List<PermissionLevel>()
+                {
+                    new PermissionLevel() {actor = a, permission = "active"}
+                };
         }
 
         #endregion
@@ -234,7 +250,7 @@ namespace FioSharp
             }
             return await GetFioApi().GetFioDomains(key, limit, offset);
         }
-        public async Task<GetSentFioRequestsResponse> GetSentFioRequests(string fioPublicKey=null, int limit, int offset)
+        public async Task<GetSentFioRequestsResponse> GetSentFioRequests(int limit, int offset, string fioPublicKey = null)
         {
             string key = fioPublicKey;
             if (key == null)
