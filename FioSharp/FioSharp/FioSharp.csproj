@@ -6,19 +6,19 @@
     <Company>FIO</Company>
     <PackageTags>FIO, NetStandard, secp256k1, Blockchain</PackageTags>
     <Description>C# client library for FIO blockchain. The library is based on https://github.com/EOSIO/eosjs and MIT licensed.</Description>
-    <RepositoryUrl>https://github.com/Luzzotica/fio-sharp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/Luzzotica/FioSharp</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <Copyright>Copyright 2022</Copyright>
     <Product>FioSharp</Product>
     <PackageId>FioSharp</PackageId>
     <PackageReleaseNotes>Built SDK for easy usage, wrote tests, renamed folders from EOS.</PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <AssemblyVersion>1.0.1.0</AssemblyVersion>
-    <FileVersion>1.0.1.0</FileVersion>
-    <Version>1.0.1</Version>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.3</FileVersion>
+    <Version>1.0.3</Version>
+    <ReleaseVersion>1.0.3</ReleaseVersion>
     <Owners>FIO</Owners>
     <Title>FioSharp</Title>
-    <ReleaseVersion>1.0.3</ReleaseVersion>
     <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
