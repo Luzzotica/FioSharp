@@ -284,7 +284,6 @@ namespace FioSharp
         public HttpRequestMessage BuildJsonRequestMessage(string url, object data)
         {
             string jason = JsonConvert.SerializeObject(data);
-            new HttpRequestMessage(HttpMethod.Post, url) { }
             return new HttpRequestMessage(HttpMethod.Post, url)
             {
                 Content = new StringContent(jason, Encoding.UTF8, "application/json")

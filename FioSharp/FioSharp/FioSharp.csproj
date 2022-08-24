@@ -12,12 +12,14 @@
     <Product>FioSharp</Product>
     <PackageId>FioSharp</PackageId>
     <PackageReleaseNotes>Built SDK for easy usage, wrote tests, renamed folders from EOS.</PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyVersion>1.0.1.0</AssemblyVersion>
     <FileVersion>1.0.1.0</FileVersion>
     <Version>1.0.1</Version>
     <Owners>FIO</Owners>
     <Title>FioSharp</Title>
     <ReleaseVersion>1.0.3</ReleaseVersion>
+    <PackOnBuild>true</PackOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
