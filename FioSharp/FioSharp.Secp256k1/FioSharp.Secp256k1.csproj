@@ -2,32 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <ReleaseVersion>1.0.2</ReleaseVersion>
+    <ReleaseVersion>1.0.3</ReleaseVersion>
   </PropertyGroup>
   
-  <!--
-    The following solves the problem that 'dotnet pack' does not include the DLLs from referenced projects.
-    See https://github.com/NuGet/Home/issues/3891 for a description of the problem
-    and for newer versions / workarounds / built-in methods.
-  -->
-  <!-- <ItemGroup>
-    <None Remove="NBitcoin.Secp256k1" />
-    <None Remove="NBitcoin" />
-  </ItemGroup> -->
   <ItemGroup>
     <PackageReference Include="NBitcoin" Version="7.0.7" />
   </ItemGroup>
-  <!-- <PropertyGroup>
-    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput> -->
-    <!-- include PDBs in the NuGet package -->
-    <!-- <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-  </PropertyGroup> -->
-  
-  <!-- <Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
-    <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-    </ItemGroup>
-  </Target> -->
 
   <ItemGroup>
     <None Remove="Helpers\" />

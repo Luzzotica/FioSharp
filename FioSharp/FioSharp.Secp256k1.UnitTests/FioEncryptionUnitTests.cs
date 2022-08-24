@@ -24,7 +24,7 @@ namespace FioSharp.Secp256k1.UnitTests
         {
             Exception e = Assert.Throws<Exception>(() =>
             {
-                FioEncryptionManager.GetInstance().EncryptBytes(secret, plaintext, new byte[] { 1 });
+                FioEncryptionManager.EncryptBytes(secret, plaintext, new byte[] { 1 });
             });
 
             Assert.NotNull(e);
@@ -36,7 +36,7 @@ namespace FioSharp.Secp256k1.UnitTests
         {
             Exception e = Assert.Throws<Exception>(() =>
             {
-                FioEncryptionManager.GetInstance().DecryptBytes(secret, cipherBuffer.Concat(new byte[] { 1 }).ToArray());
+                FioEncryptionManager.DecryptBytes(secret, cipherBuffer.Concat(new byte[] { 1 }).ToArray());
             });
 
             Assert.NotNull(e);
@@ -46,14 +46,14 @@ namespace FioSharp.Secp256k1.UnitTests
         [Test]
         public void TestEncrypt()
         {
-            byte[] c = FioEncryptionManager.GetInstance().EncryptBytes(secret, plaintext, IV);
+            byte[] c = FioEncryptionManager.EncryptBytes(secret, plaintext, IV);
             Assert.AreEqual(cipherBuffer, c);
         }
 
         [Test]
         public void TestDecrypt()
         {
-            byte[] c = FioEncryptionManager.GetInstance().DecryptBytes(secret, cipherBuffer);
+            byte[] c = FioEncryptionManager.DecryptBytes(secret, cipherBuffer);
             Assert.AreEqual(plaintext, c);
         }
 
@@ -62,8 +62,8 @@ namespace FioSharp.Secp256k1.UnitTests
         {
             byte[] message = new byte[32];
             RandomNumberGenerator.Create().GetBytes(message);
-            byte[] c = FioEncryptionManager.GetInstance().EncryptBytes(secret, message, IV);
-            byte[] p = FioEncryptionManager.GetInstance().DecryptBytes(secret, c);
+            byte[] c = FioEncryptionManager.EncryptBytes(secret, message, IV);
+            byte[] p = FioEncryptionManager.DecryptBytes(secret, c);
             Assert.AreEqual(message, p);
         }
 

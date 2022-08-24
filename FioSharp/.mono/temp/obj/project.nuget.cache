@@ -1,0 +1,18 @@
+{
+  "version": 2,
+  "dgSpecHash": "p7NeJliYeAa3/jHGTE6uy7J+sjqWC1/UKcrRWTHTKH1PJ6CchtX2V9P4yS0eF4Vou2MEhfPFkhESva36mCVDyA==",
+  "success": false,
+  "projectFilePath": "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Godot/FioSharp.Godot.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1102",
+      "level": "Error",
+      "message": "Unable to find package fio-sharp with version (>= 1.0.3)\n  - Found 3 version(s) in FioSharp [ Nearest version: 1.0.2 ]\n  - Found 0 version(s) in nuget.org",
+      "libraryId": "fio-sharp",
+      "targetGraphs": [
+        ".NETFramework,Version=v4.7.1"
+      ]
+    }
+  ]
+}

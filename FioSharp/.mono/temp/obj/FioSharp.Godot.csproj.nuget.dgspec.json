@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Godot/FioSharp.Godot.csproj": {}
+  },
+  "projects": {
+    "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Godot/FioSharp.Godot.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Godot/FioSharp.Godot.csproj",
+        "projectName": "FioSharp.Godot",
+        "projectPath": "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Godot/FioSharp.Godot.csproj",
+        "packagesPath": "/Users/sterlinglong/.nuget/packages/",
+        "outputPath": "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/.mono/temp/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/sterlinglong/.config/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net471"
+        ],
+        "sources": {
+          "/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp/bin/Debug": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net471": {
+            "targetAlias": "net471",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net471": {
+          "targetAlias": "net471",
+          "dependencies": {
+            "fio-sharp": {
+              "target": "Package",
+              "version": "[1.0.3, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/6.0.105/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Unity3D/obj/Debug/netstandard2.0/FioSharp.Unity3D.csproj.AssemblyReference.cache
+/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Unity3D/obj/Debug/netstandard2.0/FioSharp.Unity3D.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Unity3D/obj/Debug/netstandard2.0/FioSharp.Unity3D.AssemblyInfoInputs.cache
+/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Unity3D/obj/Debug/netstandard2.0/FioSharp.Unity3D.AssemblyInfo.cs
+/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Unity3D/obj/Debug/netstandard2.0/FioSharp.Unity3D.csproj.CoreCompileInputs.cache

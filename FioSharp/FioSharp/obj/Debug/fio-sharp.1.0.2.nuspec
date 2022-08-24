@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>fio-sharp</id>
+    <version>1.0.2</version>
+    <authors>Sterling Long</authors>
+    <licenseUrl>https://github.com/GetScatter/eos-sharp/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/GetScatter/eos-sharp</projectUrl>
+    <description>C# client library for FIO blockchain. The library is based on https://github.com/EOSIO/eosjs and MIT licensed.</description>
+    <releaseNotes>Increased usability of CryptoHelper class to make it easier to create Fio Req transactions.</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>FIO, NetStandard, secp256k1, Blockchain</tags>
+    <repository type="git" url="https://github.com/GetScatter/eos-sharp" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="FioSharp.Core" version="1.0.0" exclude="Build,Analyzers" />
+        <dependency id="NBitcoin" version="7.0.7" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp/bin/Debug/netstandard2.0/FioSharp.pdb" target="lib/netstandard2.0/FioSharp.pdb" />
+    <file src="/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp.Core/bin/Debug/netstandard2.0/FioSharp.Core.dll" target="lib/netstandard2.0/FioSharp.Core.dll" />
+    <file src="/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/FioSharp.Secp256k1/bin/Debug/netstandard2.0/FioSharp.Secp256k1.dll" target="lib/netstandard2.0/FioSharp.Secp256k1.dll" />
+    <file src="/Users/sterlinglong/NonCloud/FIO/fio-sharp/FioSharp/EosSharp/bin/Debug/netstandard2.0/FioSharp.dll" target="lib/netstandard2.0/FioSharp.dll" />
+  </files>
+</package>
