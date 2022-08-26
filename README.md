@@ -11,6 +11,13 @@ The only tests that are functioning right now are in the following files:
 - FioSdkUnitTests.cs
 - FioUnitTests.cs
 
+To run the tests in any of these files, 
+1. Open the `FioSharp.sln` file in Visual Studio.  
+2. Navigate to FioSharp.Tests.  
+3. Right click on any of the test files and click on `Run Test(s)`.  
+4. If that option is grayed out, open the file you wish to run the tests of, find a `[Test]` tag, right click on it and click on `Run Test(s)`. This will run that individual test.  
+5. Once you have done that, the `Run Test(s)` should be available by right clicking on the file.  
+
 ## Scripts
 
 Scripts are used to generate the `FioApi.cs` and `FioTransactions.cs` files.  
